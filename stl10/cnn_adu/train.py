@@ -5,8 +5,8 @@ sys.path.append('../../..')
 
 import numpy
 
-from fastor import util
-from fastor.datasets import supervised_dataset
+from anna import util
+from anna.datasets import supervised_dataset
 
 import checkpoints
 from model import SupervisedModel

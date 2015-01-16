@@ -5,8 +5,8 @@ import argparse
 import numpy
 
 from model import SupervisedModel
-from fastor import util
-from fastor.datasets import supervised_dataset
+from anna import util
+from anna.datasets import supervised_dataset
 
 def load_stl10_data(train_split):
 
