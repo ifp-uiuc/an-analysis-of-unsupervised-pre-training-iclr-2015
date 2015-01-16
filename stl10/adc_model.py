@@ -3,24 +3,25 @@ import numpy
 from anna.layers import layers, cc_layers
 import anna.models
 
-class UnsupervisedModel(anna.models.UnsupervisedModel):        
+
+class UnsupervisedModel(anna.models.UnsupervisedModel):
     batch = 128
-    input = cc_layers.Input2DLayer(batch, 3, 96, 96)    
-    
+    input = cc_layers.Input2DLayer(batch, 3, 96, 96)
+
     k = float(numpy.random.rand()*1+0.2)
     print '## k = %.3f' % k
-    winit1 = k/numpy.sqrt(5*5*3) # was = 0.25 
-    winit2 = k/numpy.sqrt(5*5*64)  
-    winit3 = k/numpy.sqrt(5*5*128)  
+    winit1 = k/numpy.sqrt(5*5*3)
+    winit2 = k/numpy.sqrt(5*5*64)
+    winit3 = k/numpy.sqrt(5*5*128)
     binit = 0.0
-    
+
     def trec(x):
-      return x*(x > 0.0)
+        return x*(x > 0.0)
 
     nonlinearity = trec
 
     conv1 = cc_layers.Conv2DNoBiasLayer(
-        input, 
+        input,
         n_filters=64,
         filter_size=5,
         weights_std=winit1,
@@ -28,56 +29,7 @@ class UnsupervisedModel(anna.models.UnsupervisedModel):
         pad=2)
     pool1 = cc_layers.Pooling2DLayer(conv1, 2, stride=2)
     conv2 = cc_layers.Conv2DNoBiasLayer(
-        pool1, 
-        n_filters=128,
-        filter_size=5,
-        weights_std=winit2,
-        nonlinearity=nonlinearity,
-        pad=2)
-    pool2 = cc_layers.Pooling2DLayer(conv2, 2, stride=2)    
-    conv3 = cc_layers.Conv2DNoBiasLayer(
-        pool2, 
-        n_filters=256,
-        filter_size=5,
-        weights_std=winit3,
-        nonlinearity=nonlinearity,
-        pad=2)    
-    deconv3 = cc_layers.Deconv2DNoBiasLayer(
-        conv3, conv3, nonlinearity=layers.identity)
-    unpool4 = cc_layers.Unpooling2DLayer(deconv3, pool2)
-    deconv4  = cc_layers.Deconv2DNoBiasLayer(
-        unpool4, conv2, nonlinearity=layers.identity)
-    unpool5 = cc_layers.Unpooling2DLayer(deconv4, pool1)
-    output = cc_layers.Deconv2DNoBiasLayer(
-        unpool5, conv1, nonlinearity=layers.identity)    
-
-
-class SupervisedModel(anna.models.SupervisedModel):    
-    batch = 128
-    input = cc_layers.Input2DLayer(batch, 3, 96, 96)    
-    
-    k = float(numpy.random.rand()*1+0.2)
-    print '## k = %.3f' % k
-    winit1 = k/numpy.sqrt(5*5*3) # was = 0.25  
-    winit2 = k/numpy.sqrt(5*5*64)  
-    winit3 = k/numpy.sqrt(5*5*128)  
-    binit = 0.0
-    
-    def trec(x):
-      return x*(x > 0.0)
-
-    nonlinearity = trec
-
-    conv1 = cc_layers.Conv2DNoBiasLayer(
-        input, 
-        n_filters=64,
-        filter_size=5,
-        weights_std=winit1,
-        nonlinearity=nonlinearity,
-        pad=2)
-    pool1 = cc_layers.Pooling2DLayer(conv1, 2, stride=2)
-    conv2 = cc_layers.Conv2DNoBiasLayer(
-        pool1, 
+        pool1,
         n_filters=128,
         filter_size=5,
         weights_std=winit2,
@@ -85,21 +37,70 @@ class SupervisedModel(anna.models.SupervisedModel):
         pad=2)
     pool2 = cc_layers.Pooling2DLayer(conv2, 2, stride=2)
     conv3 = cc_layers.Conv2DNoBiasLayer(
-        pool2, 
+        pool2,
         n_filters=256,
         filter_size=5,
         weights_std=winit3,
         nonlinearity=nonlinearity,
-        pad=2)   
+        pad=2)
+    deconv3 = cc_layers.Deconv2DNoBiasLayer(
+        conv3, conv3, nonlinearity=layers.identity)
+    unpool4 = cc_layers.Unpooling2DLayer(deconv3, pool2)
+    deconv4 = cc_layers.Deconv2DNoBiasLayer(
+        unpool4, conv2, nonlinearity=layers.identity)
+    unpool5 = cc_layers.Unpooling2DLayer(deconv4, pool1)
+    output = cc_layers.Deconv2DNoBiasLayer(
+        unpool5, conv1, nonlinearity=layers.identity)
+
+
+class SupervisedModel(anna.models.SupervisedModel):
+    batch = 128
+    input = cc_layers.Input2DLayer(batch, 3, 96, 96)
+
+    k = float(numpy.random.rand()*1+0.2)
+    print '## k = %.3f' % k
+    winit1 = k/numpy.sqrt(5*5*3)
+    winit2 = k/numpy.sqrt(5*5*64)
+    winit3 = k/numpy.sqrt(5*5*128)
+    binit = 0.0
+
+    def trec(x):
+        return x*(x > 0.0)
+
+    nonlinearity = trec
+
+    conv1 = cc_layers.Conv2DNoBiasLayer(
+        input,
+        n_filters=64,
+        filter_size=5,
+        weights_std=winit1,
+        nonlinearity=nonlinearity,
+        pad=2)
+    pool1 = cc_layers.Pooling2DLayer(conv1, 2, stride=2)
+    conv2 = cc_layers.Conv2DNoBiasLayer(
+        pool1,
+        n_filters=128,
+        filter_size=5,
+        weights_std=winit2,
+        nonlinearity=nonlinearity,
+        pad=2)
+    pool2 = cc_layers.Pooling2DLayer(conv2, 2, stride=2)
+    conv3 = cc_layers.Conv2DNoBiasLayer(
+        pool2,
+        n_filters=256,
+        filter_size=5,
+        weights_std=winit3,
+        nonlinearity=nonlinearity,
+        pad=2)
     pool3 = cc_layers.Pooling2DLayer(conv3, 12, stride=12)
 
     winitD1 = k/numpy.sqrt(numpy.prod(pool3.get_output_shape()))
     winitD2 = k/numpy.sqrt(512)
 
-    pool3_shuffle = cc_layers.ShuffleC01BToBC01Layer(pool3)    
+    pool3_shuffle = cc_layers.ShuffleC01BToBC01Layer(pool3)
     fc4 = layers.DenseLayer(
         pool3_shuffle,
-        n_outputs = 512,
+        n_outputs=512,
         weights_std=winitD1,
         init_bias_value=1.0,
         nonlinearity=layers.rectify,
