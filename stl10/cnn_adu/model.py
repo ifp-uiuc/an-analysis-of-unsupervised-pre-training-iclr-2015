@@ -1,7 +1,7 @@
 import numpy
 
-from fastor.layers import layers, cc_layers
-import fastor.models
+from anna.layers import layers, cc_layers
+import anna.models
 
 
 class UnsupervisedModel(fastor.models.UnsupervisedModel):
