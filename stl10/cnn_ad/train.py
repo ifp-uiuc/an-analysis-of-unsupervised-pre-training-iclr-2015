@@ -1,21 +1,20 @@
 import argparse
 import os
 import sys
-sys.path.append('../../..')
+sys.path.append('..')
 
 import numpy
 
 from anna import util
 from anna.datasets import supervised_dataset
 
-import checkpoints
-from model import SupervisedModel
+from models import CNNModel
 
 print('Start')
 
 parser = argparse.ArgumentParser(
-    prog='train_finetune_greedy',
-    description='Script to train network in greedy fashion.')
+    prog='train_finetune_random',
+    description='Script to train network from random initialization.')
 parser.add_argument("-s", "--split", default='0',
                     help='Training split of stl10 to use. (0-9)')
 args = parser.parse_args()
@@ -31,9 +30,7 @@ f = open('pid_'+str(train_split), 'wb')
 f.write(str(pid)+'\n')
 f.close()
 
-model = SupervisedModel('experiment', './', learning_rate=1e-2)
-checkpoint = checkpoints.supervised_greedy
-util.set_parameters_from_unsupervised_model(model, checkpoint)
+model = CNNModel('experiment', './', learning_rate=1e-2)
 monitor = util.Monitor(model, checkpoint_directory='checkpoints_'
                                                    + str(train_split))
 
