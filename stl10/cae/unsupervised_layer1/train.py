@@ -18,17 +18,18 @@ def orthogonalize(w):
     dim2, dim1 = w.shape
     dim = numpy.min((dim1, dim2))
     u, s, v = numpy.linalg.svd(w)
-    S = numpy.zeros((dim2,dim1))
+    S = numpy.zeros((dim2, dim1))
     s = s/s
-    S[:dim,:dim] = numpy.diag(s)
-    w = numpy.dot(u,numpy.dot(S,v))
+    S[:dim, :dim] = numpy.diag(s)
+    w = numpy.dot(u, numpy.dot(S, v))
     w = numpy.float32(w)
     return w
+
 
 def conv_orthogonalize(w, k=1.0):
     # Reshape filters into a matrix
     channels, width, height, filters = w.shape
-    w = w.reshape(channels*width*height, filters).transpose(1,0)
+    w = w.reshape(channels*width*height, filters).transpose(1, 0)
 
     # Orthogonalize the matrix
     w = orthogonalize(w)
@@ -39,14 +40,14 @@ def conv_orthogonalize(w, k=1.0):
     hamming = numpy.outer(hamming1, hamming2)
 
     # Use it to mask the input to w
-    mask = numpy.tile(hamming[None,:,:], (channels,1,1))
+    mask = numpy.tile(hamming[None, :, :], (channels, 1, 1))
     mask = mask.reshape(channels*width*height)*k
     m = numpy.diag(mask)
     w = numpy.dot(w, m)
 
     # Reshape the matrix into filters
-    w = w.transpose(1,0)
-    w =  w.reshape(channels, width, height, filters)
+    w = w.transpose(1, 0)
+    w = w.reshape(channels, width, height, filters)
     w = numpy.float32(w)
     return w
 
@@ -95,7 +96,7 @@ test_x_batch = test_iterator.next()
 test_x_batch = test_x_batch.transpose(1, 2, 3, 0)
 test_x_batch = normer.run(test_x_batch)
 recon_visualizer = util.NormReconVisualizer(model, test_x_batch, steps=200)
-recon_visualizer.run()   
+recon_visualizer.run()
 
 # Create object to display first layer filter weights.
 filter_visualizer = util.FilterVisualizer(model, steps=200)
@@ -103,10 +104,10 @@ filter_visualizer.run()
 
 print('Training Model')
 for x_batch in train_iterator:
-    x_batch = x_batch.transpose(1, 2, 3, 0)    
+    x_batch = x_batch.transpose(1, 2, 3, 0)
     monitor.start()
     x_batch = normer.run(x_batch)
     error = model.train(x_batch)
-    monitor.stop(error) 
-    recon_visualizer.run()   
+    monitor.stop(error)
+    recon_visualizer.run()
     filter_visualizer.run()

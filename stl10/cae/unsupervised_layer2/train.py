@@ -20,17 +20,18 @@ def orthogonalize(w):
     dim2, dim1 = w.shape
     dim = numpy.min((dim1, dim2))
     u, s, v = numpy.linalg.svd(w)
-    S = numpy.zeros((dim2,dim1))
+    S = numpy.zeros((dim2, dim1))
     s = s/s
-    S[:dim,:dim] = numpy.diag(s)
-    w = numpy.dot(u,numpy.dot(S,v))
+    S[:dim, :dim] = numpy.diag(s)
+    w = numpy.dot(u, numpy.dot(S, v))
     w = numpy.float32(w)
     return w
+
 
 def conv_orthogonalize(w, k=1.0):
     # Reshape filters into a matrix
     channels, width, height, filters = w.shape
-    w = w.reshape(channels*width*height, filters).transpose(1,0)
+    w = w.reshape(channels*width*height, filters).transpose(1, 0)
 
     # Orthogonalize the matrix
     w = orthogonalize(w)
@@ -41,14 +42,14 @@ def conv_orthogonalize(w, k=1.0):
     hamming = numpy.outer(hamming1, hamming2)
 
     # Use it to mask the input to w
-    mask = numpy.tile(hamming[None,:,:], (channels,1,1))
+    mask = numpy.tile(hamming[None, :, :], (channels, 1, 1))
     mask = mask.reshape(channels*width*height)*k
     m = numpy.diag(mask)
     w = numpy.dot(w, m)
 
     # Reshape the matrix into filters
-    w = w.transpose(1,0)
-    w =  w.reshape(channels, width, height, filters)
+    w = w.transpose(1, 0)
+    w = w.reshape(channels, width, height, filters)
     w = numpy.float32(w)
     return w
 
@@ -61,7 +62,7 @@ f.write(str(pid)+'\n')
 f.close()
 
 model = CAELayer2Model('experiment', './', learning_rate=1e-5)
-checkpoint = checkpoints.unsupervised_greedy
+checkpoint = checkpoints.unsupervised_layer1
 util.set_parameters_from_unsupervised_model(model, checkpoint)
 monitor = util.Monitor(model, save_steps=200)
 
@@ -69,8 +70,10 @@ model.conv1.trainable = False
 model._compile()
 
 # Function to compute sparsity
-output1 = theano.function([model.input.output()], T.mean(T.sum(model.conv1.output()>0, axis=0)))
-output2 = theano.function([model.input.output()], T.mean(T.sum(model.conv2.output()>0, axis=0)))
+output1 = theano.function([model.input.output()],
+                          T.mean(T.sum(model.conv1.output() > 0, axis=0)))
+output2 = theano.function([model.input.output()],
+                          T.mean(T.sum(model.conv2.output() > 0, axis=0)))
 
 # Loading STL-10 dataset
 print('Loading Data')
@@ -95,7 +98,7 @@ normer = util.Normer2(filter_size=5, num_channels=3)
 W2 = model.conv2.W.get_value()
 W2 = conv_orthogonalize(W2)
 # Scale second layer weights.
-s=2.5
+s = 2.5
 model.conv2.W.set_value(W2*s)
 
 # Grab test data to give to NormReconVisualizer.
@@ -103,7 +106,7 @@ test_x_batch = test_iterator.next()
 test_x_batch = test_x_batch.transpose(1, 2, 3, 0)
 test_x_batch = normer.run(test_x_batch)
 recon_visualizer = util.NormReconVisualizer(model, test_x_batch, steps=200)
-recon_visualizer.run()   
+recon_visualizer.run()
 
 # Create object to display first layer filter weights.
 filter_visualizer = util.FilterVisualizer(model, steps=200)
@@ -112,12 +115,12 @@ filter_visualizer.run()
 print('Training Model')
 count = 0
 for x_batch in train_iterator:
-    x_batch = x_batch.transpose(1, 2, 3, 0)    
+    x_batch = x_batch.transpose(1, 2, 3, 0)
     monitor.start()
     x_batch = normer.run(x_batch)
     error = model.train(x_batch)
-    monitor.stop(error) 
-    recon_visualizer.run()   
+    monitor.stop(error)
+    recon_visualizer.run()
     filter_visualizer.run()
     if count % 100 == 0:
         sparsity_layer_1 = output1(x_batch)
