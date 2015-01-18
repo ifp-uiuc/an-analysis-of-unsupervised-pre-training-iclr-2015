@@ -4,7 +4,73 @@ from anna.layers import layers, cc_layers
 import anna.models
 
 
-class UnsupervisedModel(anna.models.UnsupervisedModel):
+class CAELayer1Model(anna.models.UnsupervisedModel):
+    batch = 128
+    input = cc_layers.Input2DLayer(batch, 3, 96, 96)
+
+    k = float(numpy.random.rand()*1+0.2)
+    print '## k = %.3f' % k
+    winit1 = k/numpy.sqrt(5*5*3)
+    binit = 0.0
+
+    def trec(x):
+        return x*(x > 0.0)
+
+    nonlinearity = trec
+
+    conv1 = cc_layers.Conv2DNoBiasLayer(
+        input,
+        n_filters=64,
+        filter_size=5,
+        weights_std=winit1,
+        nonlinearity=nonlinearity,
+        pad=2)
+    pool1 = cc_layers.Pooling2DLayer(conv1, 2, stride=2)
+    unpool2 = cc_layers.Unpooling2DLayer(pool1, pool1)
+    output = cc_layers.Deconv2DNoBiasLayer(
+        unpool2, conv1, nonlinearity=layers.identity)
+
+
+class CAELayer2Model(anna.models.UnsupervisedModel):
+    batch = 128
+    input = cc_layers.Input2DLayer(batch, 3, 96, 96)
+
+    k = float(numpy.random.rand()*1+0.2)
+    print '## k = %.3f' % k
+    winit1 = k/numpy.sqrt(5*5*3)
+    winit2 = k/numpy.sqrt(5*5*64)
+    binit = 0.0
+
+    def trec(x):
+        return x*(x > 0.0)
+
+    nonlinearity = trec
+
+    conv1 = cc_layers.Conv2DNoBiasLayer(
+        input,
+        n_filters=64,
+        filter_size=5,
+        weights_std=winit1,
+        nonlinearity=nonlinearity,
+        pad=2)
+    pool1 = cc_layers.Pooling2DLayer(conv1, 2, stride=2)
+    conv2 = cc_layers.Conv2DNoBiasLayer(
+        pool1,
+        n_filters=128,
+        filter_size=5,
+        weights_std=winit2,
+        nonlinearity=nonlinearity,
+        pad=2)
+    pool2 = cc_layers.Pooling2DLayer(conv2, 2, stride=2)
+    unpool3 = cc_layers.Unpooling2DLayer(pool2, pool2)
+    deconv3 = cc_layers.Deconv2DNoBiasLayer(
+        unpool3, conv2, nonlinearity=layers.identity)
+    unpool4 = cc_layers.Unpooling2DLayer(deconv3, pool1)
+    output = cc_layers.Deconv2DNoBiasLayer(
+        unpool4, conv1, nonlinearity=layers.identity)
+
+
+class CAELayer3Model(anna.models.UnsupervisedModel):
     batch = 128
     input = cc_layers.Input2DLayer(batch, 3, 96, 96)
 
@@ -53,7 +119,7 @@ class UnsupervisedModel(anna.models.UnsupervisedModel):
         unpool5, conv1, nonlinearity=layers.identity)
 
 
-class SupervisedModel(anna.models.SupervisedModel):
+class CNNModel(anna.models.SupervisedModel):
     batch = 128
     input = cc_layers.Input2DLayer(batch, 3, 96, 96)
 

@@ -1,7 +1,7 @@
 import argparse
 import os
 import sys
-sys.path.append('../../..')
+sys.path.append('..')
 
 import numpy
 
@@ -9,7 +9,7 @@ from anna import util
 from anna.datasets import supervised_dataset
 
 import checkpoints
-from model import SupervisedModel
+from models import CNNModel
 
 print('Start')
 
@@ -31,11 +31,11 @@ f = open('pid_'+str(train_split), 'wb')
 f.write(str(pid)+'\n')
 f.close()
 
-model = SupervisedModel('experiment', './', learning_rate=1e-2)
-checkpoint = checkpoints.supervised_greedy
+model = CNNModel('experiment', './', learning_rate=1e-2)
+checkpoint = checkpoints.supervised
 util.set_parameters_from_unsupervised_model(model, checkpoint)
-monitor = util.Monitor(model, checkpoint_directory='checkpoints_'
-                                                   + str(train_split))
+monitor = util.Monitor(model,
+                       checkpoint_directory='checkpoints_'+str(train_split))
 
 # Loading STL-10 dataset
 print('Loading Data')
@@ -48,11 +48,11 @@ y_test = numpy.load('/data/stl10_matlab/test_y.npy')
 
 X_train = numpy.float32(X_train)
 X_train /= 255.0
-X_train *= 2.0
+X_train *= 1.0
 
 X_test = numpy.float32(X_test)
 X_test /= 255.0
-X_test *= 2.0
+X_test *= 1.0
 
 train_dataset = supervised_dataset.SupervisedDataset(X_train, y_train)
 test_dataset = supervised_dataset.SupervisedDataset(X_test, y_test)
@@ -64,7 +64,7 @@ test_iterator = test_dataset.iterator(
 # Create object to local contrast normalize a batch.
 # Note: Every batch must be normalized before use.
 normer = util.Normer2(filter_size=5, num_channels=3)
-augmenter = util.DataAugmenter(16, (96, 96))
+augmenter = util.DataAugmenter(16, (96, 96), color_on=True)
 
 print('Training Model')
 for x_batch, y_batch in train_iterator:

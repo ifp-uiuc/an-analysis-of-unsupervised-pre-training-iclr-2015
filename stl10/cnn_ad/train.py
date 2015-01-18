@@ -1,14 +1,14 @@
 import argparse
 import os
 import sys
-sys.path.append('../../..')
+sys.path.append('..')
 
 import numpy
 
 from anna import util
 from anna.datasets import supervised_dataset
 
-from model import SupervisedModel
+from models import CNNModel
 
 print('Start')
 
@@ -30,7 +30,7 @@ f = open('pid_'+str(train_split), 'wb')
 f.write(str(pid)+'\n')
 f.close()
 
-model = SupervisedModel('experiment', './', learning_rate=1e-2)
+model = CNNModel('experiment', './', learning_rate=1e-2)
 monitor = util.Monitor(model, checkpoint_directory='checkpoints_'
                                                    + str(train_split))
 
