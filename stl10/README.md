@@ -27,7 +27,7 @@ In order to train the first layer of the neural network, all you need to do is
 navigative to `./cae/unsupervised_layer1/` and type the following command
 into the terminal:
 
-```
+``` shell
 $ THEANO_FLAGS='floatX=float32,device=gpu0,nvcc.fastmath=True' \
 python -u train.py \
 > log.txt & 
@@ -53,10 +53,10 @@ to training the first. The process can be broken down into three repeatable
 steps. 
 
 For a given layer L:  
-1.  Navigate to the `unsupervised_layer_L` directory in the `cae` directory
-2.  Run the terminal command above to train layer L
+1.  Navigate to the `unsupervised_layer_L` directory in the `cae` directory  
+2.  Run the terminal command above to train layer L  
 3.  Set the `unsupervised_layer_L` variable in `checkpoints.py` to the 
-	appropriate `.pkl` file in `./cae/unsupervised_layer_L/checkpoints/`
+	appropriate `.pkl` file in `./cae/unsupervised_layer_L/checkpoints/`  
 
 
 # Supervised Training
@@ -70,13 +70,13 @@ For example, `cnn_ad` will train a cnn from a random intialzation with data augm
 
 
 You can train the cnn with following command: 
-```
+``` shell
 $ THEANO_FLAGS='floatX=float32,device=gpu0,nvcc.fastmath=True' \ 
 python -u train.py --split 0  \ 
 > log0.txt & 
 ```
 
-Since the ![STL-10 dataset][1] asks that people train their models on 10 
+Since the ![STL-10 dataset][stl10] asks that people train their models on 10 
 pre-specified splits and average the results, the `--split` option indicates 
 which of the 10 splits to use (0-9) when traning. The code will save the `.pkl` 
 file containing the network parameters to a directory called `./checkpoints_0/` 
@@ -90,7 +90,7 @@ checkpoint by running the checkpoint evaluator found in
 `find_best_performance.py`. We will use the model trained in `cnn_ad` as an 
 example. Simply run the following command:
 
-```
+``` shell
 $ THEANO_FLAGS='floatX=float32,device=gpu0,nvcc.fastmath=True' \ 
 python -u find_best_performance.py --split 0 ./cnn_ad/checkpoints_0/ \
 > cnn_ad_best_performance_split_0.txt &
@@ -111,5 +111,4 @@ hopefully obtain results similar to ours:
 (INSERT STL-10 TABLE (Table 3) FROM PAPER HERE).
 
 
-# References
 [stl10]: http://cs.stanford.edu/~acoates/stl10/ "STL-10 Dataset"
