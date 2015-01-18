@@ -1,10 +1,10 @@
 # STL-10 Experiments
 
 In this folder, we present all of the code used to obtain our results for 
-four different networks we trained on the ![STL-10 dataset][stl10]. In each of the
-four cases, we trained a three layer convolutional neural network (cnn), some 
-of these we pre-train using a convolutional autoencoder (cae). Overall this
-experiment uses four types of regularization which are denoted as follows:
+four different networks we trained on the ![STL-10][STL-10] dataset. In each of 
+the four cases, we trained a three layer convolutional neural network (cnn), 
+some of these we pre-train using a convolutional autoencoder (cae). Overall 
+this experiment uses four types of regularization which are denoted as follows:
 
 + a = Data Augmentation
 + d = Dropout
@@ -53,6 +53,7 @@ to training the first. The process can be broken down into three repeatable
 steps. 
 
 For a given layer L:  
+
 1.  Navigate to the `unsupervised_layer_L` directory in the `cae` directory  
 2.  Run the terminal command above to train layer L  
 3.  Set the `unsupervised_layer_L` variable in `checkpoints.py` to the 
@@ -76,7 +77,7 @@ python -u train.py --split 0  \
 > log0.txt & 
 ```
 
-Since the ![STL-10 dataset][stl10] asks that people train their models on 10 
+Since the ![STL-10][STL-10] datsaet asks that people train their models on 10 
 pre-specified splits and average the results, the `--split` option indicates 
 which of the 10 splits to use (0-9) when traning. The code will save the `.pkl` 
 file containing the network parameters to a directory called `./checkpoints_0/` 
@@ -111,4 +112,4 @@ hopefully obtain results similar to ours:
 (INSERT STL-10 TABLE (Table 3) FROM PAPER HERE).
 
 
-[stl10]: http://cs.stanford.edu/~acoates/stl10/ "STL-10 Dataset"
+[STL-10]: http://cs.stanford.edu/~acoates/stl10/
