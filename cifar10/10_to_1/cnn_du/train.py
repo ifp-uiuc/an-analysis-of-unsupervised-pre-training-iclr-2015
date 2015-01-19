@@ -7,6 +7,7 @@ import numpy
 from anna import util
 from anna.datasets import supervised_dataset
 
+import checkpoints
 from models import CNNModel
 
 print('Start')
@@ -18,6 +19,8 @@ f.write(str(pid)+'\n')
 f.close()
 
 model = CNNModel('experiment', './', learning_rate=1e-2)
+checkpoint = checkpoints.unsupervised_layer_3
+util.set_parameters_from_unsupervised_model(model, checkpoint)
 monitor = util.Monitor(model)
 
 # Add dropout
@@ -41,11 +44,9 @@ test_iterator = util.get_cifar_iterator('test',
                                         rescale=True)
 
 normer = util.Normer2(filter_size=5, num_channels=3)
-augmenter = util.DataAugmenter(2, (32, 32))
 
 print('Training Model')
 for x_batch, y_batch in train_iterator:
-    x_batch = augmenter.run(x_batch)
     x_batch = normer.run(x_batch)
     y_batch = numpy.int64(numpy.argmax(y_batch, axis=1))
     monitor.start()
