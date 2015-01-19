@@ -23,10 +23,6 @@ checkpoint = checkpoints.unsupervised_layer_3
 util.set_parameters_from_unsupervised_model(model, checkpoint)
 monitor = util.Monitor(model)
 
-# Add dropout
-model.fc4.dropout = 0.5
-model._compile()
-
 # Loading CIFAR-10 dataset
 print('Loading Data')
 train_iterator = util.get_cifar_iterator('train',
@@ -42,7 +38,7 @@ test_iterator = util.get_cifar_iterator('test',
                                         rescale=True)
 
 normer = util.Normer2(filter_size=5, num_channels=3)
-augmenter = util.DataAugmenter(2, (32, 32), flip=True)
+augmenter = util.DataAugmenter(2, (32, 32), flip=False)
 
 print('Training Model')
 for x_batch, y_batch in train_iterator:
