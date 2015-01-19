@@ -1,14 +1,14 @@
 import os
 import sys
-sys.path.append('../../..')
+sys.path.append('../..')
 
 import numpy
 
-from fastor import util
-from fastor.datasets import supervised_dataset
+from anna import util
+from anna.datasets import supervised_dataset
 
 import checkpoints
-from model import SupervisedModel
+from models import CNNModel
 
 print('Start')
 
@@ -18,26 +18,30 @@ f = open('pid', 'wb')
 f.write(str(pid)+'\n')
 f.close()
 
-model = SupervisedModel('experiment', './', learning_rate=1e-2)
-checkpoint = checkpoints.supervised_greedy
+model = CNNModel('experiment', './', learning_rate=1e-2)
+checkpoint = checkpoints.unsupervised_layer_3
 util.set_parameters_from_unsupervised_model(model, checkpoint)
 monitor = util.Monitor(model)
+
+# Add dropout
+model.fc4.dropout = 0.5
+model._compile()
 
 # Loading CIFAR-10 dataset
 print('Loading Data')
 train_iterator = util.get_cifar_iterator_reduced('train',
-                                    mode='random_uniform',
-                                    batch_size=128,
-                                    num_batches=100000,
-                                    rescale=True,
-                                    num_samples_per_class=500, 
-                                    which_split=0)
+                                                 mode='random_uniform',
+                                                 batch_size=128,
+                                                 num_batches=100000,
+                                                 rescale=True,
+                                                 num_samples_per_class=1000,
+                                                 which_split=0)
 
 test_iterator = util.get_cifar_iterator('test',
-                                    mode='random_uniform',
-                                    batch_size=128,
-                                    num_batches=100000,
-                                    rescale=True)
+                                        mode='random_uniform',
+                                        batch_size=128,
+                                        num_batches=100000,
+                                        rescale=True)
 
 normer = util.Normer2(filter_size=5, num_channels=3)
 augmenter = util.DataAugmenter(2, (32, 32))
@@ -49,8 +53,8 @@ for x_batch, y_batch in train_iterator:
     y_batch = numpy.int64(numpy.argmax(y_batch, axis=1))
     monitor.start()
     log_prob, accuracy = model.train(x_batch, y_batch)
-    monitor.stop(1-accuracy) # monitor takes error instead of accuracy    
-    
+    monitor.stop(1-accuracy)  # monitor takes error instead of accuracy
+
     if monitor.test:
         monitor.start()
         x_test_batch, y_test_batch = test_iterator.next()

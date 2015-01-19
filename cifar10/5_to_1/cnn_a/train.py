@@ -20,10 +20,6 @@ f.close()
 model = CNNModel('experiment', './', learning_rate=1e-2)
 monitor = util.Monitor(model)
 
-# Add dropout
-model.fc4.dropout = 0.5
-model._compile()
-
 # Loading CIFAR-10 dataset
 print('Loading Data')
 train_iterator = util.get_cifar_iterator_reduced('train',
@@ -41,7 +37,7 @@ test_iterator = util.get_cifar_iterator('test',
                                         rescale=True)
 
 normer = util.Normer2(filter_size=5, num_channels=3)
-augmenter = util.DataAugmenter(2, (32, 32))
+augmenter = util.DataAugmenter(2, (32, 32), flip=False)
 
 print('Training Model')
 for x_batch, y_batch in train_iterator:
