@@ -40,44 +40,44 @@ For your reference, we provide a checklist of all 32 experiments in the cifar10 
 
 a. 50_to_1
 
-[ ] cnn 
-[ ] cnn_a 
-[ ] cnn_d 
-[ ] cnn_u 
-[ ] cnn_ad 
-[ ] cnn_au 
-[ ] cnn_du 
-[ ] cnn_adu 
+1. [ ] cnn 
+2. [ ] cnn_a 
+3. [ ] cnn_d 
+4. [ ] cnn_u 
+5. [ ] cnn_ad 
+6. [ ] cnn_au 
+7. [ ] cnn_du 
+8. [ ] cnn_adu 
 
 b. 10_to_1
 
-[ ] cnn 
-[ ] cnn_a 
-[ ] cnn_d 
-[ ] cnn_u 
-[ ] cnn_ad 
-[ ] cnn_au 
-[ ] cnn_du 
-[ ] cnn_adu 
+1. [ ] cnn 
+2. [ ] cnn_a 
+3. [ ] cnn_d 
+4. [ ] cnn_u 
+5. [ ] cnn_ad 
+6. [ ] cnn_au 
+7. [ ] cnn_du 
+8. [ ] cnn_adu 
 
 c. 5_to_1
 
-[ ] cnn 
-[ ] cnn_a 
-[ ] cnn_d 
-[ ] cnn_u 
-[ ] cnn_ad 
-[ ] cnn_au 
-[ ] cnn_du 
-[ ] cnn_adu 
+1. [ ] cnn 
+2. [ ] cnn_a 
+3. [ ] cnn_d 
+4. [ ] cnn_u 
+5. [ ] cnn_ad 
+6. [ ] cnn_au 
+7. [ ] cnn_du 
+8. [ ] cnn_adu 
 
 d. 1_to_1
 
-[ ] cnn 
-[ ] cnn_a 
-[ ] cnn_d 
-[ ] cnn_u 
-[ ] cnn_ad 
-[ ] cnn_au 
-[ ] cnn_du 
-[ ] cnn_adu 
+1. [ ] cnn 
+2. [ ] cnn_a 
+3. [ ] cnn_d 
+4. [ ] cnn_u 
+5. [ ] cnn_ad 
+6. [ ] cnn_au 
+7. [ ] cnn_du 
+8. [ ] cnn_adu 
