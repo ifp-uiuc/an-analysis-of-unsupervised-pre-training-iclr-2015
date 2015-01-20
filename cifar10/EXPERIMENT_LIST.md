@@ -39,6 +39,7 @@ Thus, for a given ratio, the experiments are as follows:
 For your reference, we provide a checklist of all 32 experiments in the cifar10 directory below (sorted by ratio):
 
 a. 50_to_1
+
 1. [ ] cnn 
 2. [ ] cnn_a 
 3. [ ] cnn_d 
@@ -49,6 +50,7 @@ a. 50_to_1
 8. [ ] cnn_adu 
 
 b. 10_to_1
+
 1. [ ] cnn 
 2. [ ] cnn_a 
 3. [ ] cnn_d 
@@ -59,6 +61,7 @@ b. 10_to_1
 8. [ ] cnn_adu 
 
 c. 5_to_1
+
 1. [ ] cnn 
 2. [ ] cnn_a 
 3. [ ] cnn_d 
@@ -69,6 +72,7 @@ c. 5_to_1
 8. [ ] cnn_adu 
 
 d. 1_to_1
+
 1. [ ] cnn 
 2. [ ] cnn_a 
 3. [ ] cnn_d 
