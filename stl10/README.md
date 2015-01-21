@@ -1,31 +1,59 @@
 # STL-10 Experiments
 
-In this folder, we present all of the code used to obtain our results for 
-four different networks we trained on the [STL-10][STL-10] dataset. In each of 
-the four cases, we trained a three layer convolutional neural network (cnn), 
-some of these we pre-train using a convolutional autoencoder (cae). Overall 
-this experiment uses four types of regularization which are denoted as follows:
+This folder contains the code used to obtain our results on the [STL-10][STL-10] dataset. This involves training a convolutional autoencoder (cae), and then training convolutional neural network (cnn) with four types of regularization which are denoted as follows:
 
 + a = Data Augmentation
 + d = Dropout
 + c = Color Augmentation
 + u = Unsupervised Pre-training (with cae)
 
-We recommend training the cae first and then proceeding to the supervised 
-training experiments.
+We will first describe the contents of this folder, and then walk you through
+how to run the experiments.
 
+# Folder contents
+The folder contains:
+``` shell
+\cae\layer1\train.py
+\cae\layer2\train.py
+\cae\layer3\train.py
+\cnn_ad\train.py
+\cnn_adc\train.py
+\cnn_adcu\train.py
+\cnn_adu\train.py
+checkpoint_checker.py
+checkpoints.py
+models.py
+```
 
-# Unsupervised Pre-training
+## `train.py`
+As you can see, there are several `train.py` files. Each one trains either a cae model (with 1, 2, or 3 layers), or a cnn model with various regulization methods turned on. Basically the `train.py` files do all the heavy lifting of running the individual experiments. They output a directory of model checkpoint files, and a log of the training process.
 
-We will now disucss how to train the convolutional autoencoder. We train the 
-cae in a greedy fashion. Specifically, ... The code to do this can be found in 
-the `cae` folder. (DESCRIBE THE TRAINING PROCESS IN MORE DETAIL).
+## `checkpoing_checker.py`
+The file `checkpoint_checker.py` is a script used to examine all the checkpoints created by a single experiment, and choose the best one.
+
+## `checkpoints.py`
+Some of the experiments involve loading in pre-trained model checkpoints. The paths to those checkpoints will be inserted in `checkpoints.py`. The `train.py`
+files will use these paths to load the checkpoints, and take care of the rest.
+
+## `models.py`
+There are 4 neural network models used in these experiments. They include a 1, 2, and 3 layer cae, and a cnn with 3 convolutional layers. They code to construct these models is in `models.py`. They are used by the `train.py` files.
+
+Next we will walk you through running the experiments.
+
+# Experiments
+The experiments involve 1) training an unsupervised model, a stacked convolutional auto encoder as described in the paper, and 2) training supervised convolutional neural networks, with various regulization techniques.
+
+We will first describe how to train the unsupervised model, and then how to run the supervised experiments.
+
+# Unsupervised training
+
+We train the cae in a greedy fashion. First we train a cae with 1 convolutional layer (and 1 deconvolutional layer), which we call the 1 layer model. We then take the weights from that 1 layer model to initialize the layer 1 weights for a 2 layer model. The layer 1 weights are fixed, and then we train layer 2. Similarly, we then take the weights from that 2 layer model to initialize the layer 1 and layer 2 weights for a 3 layer model. The layer 1 and layer 2 weights are fixed, and then we train layer 3.
+
+We describe how to run those steps below.
 
 ## How to train layer 1
 
-In order to train the first layer of the neural network, all you need to do is 
-navigative to `./cae/unsupervised_layer1/` and type the following command
-into the terminal:
+In order to train the 1 layer cae, first navigate to `./cae/unsupervised_layer1/`, and in the terminal, run the `train.py` script by typing:
 
 ``` shell
 $ THEANO_FLAGS='floatX=float32,device=gpu0,nvcc.fastmath=True' \
