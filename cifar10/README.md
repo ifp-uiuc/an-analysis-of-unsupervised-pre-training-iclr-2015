@@ -7,7 +7,7 @@ This folder contains the code used to obtain our results on the [CIFAR-10][CIFAR
 + 5:1
 + 1:1
 
-> :pushpin: Note: the amount of training images in CIFAR-10 is 50,000. We create our unsupservised to supervised ratio by keeping the number of unsupervised training samples fixed to 50,000, and shrinking our number of supervised samples uniformally across classes.
+> :pushpin: **Note:** the amount of training images in CIFAR-10 is 50,000. We create our unsupservised to supervised ratio by keeping the number of unsupervised training samples fixed to 50,000, and shrinking our number of supervised samples uniformally across classes.
 
 And with three types of regularization which are denoted as follows:
 
