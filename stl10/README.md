@@ -28,7 +28,7 @@ models.py
 ## `train.py`
 As you can see, there are several `train.py` files. Each one trains either a cae model (with 1, 2, or 3 layers), or a cnn model with various regulization methods turned on. Basically the `train.py` files do all the heavy lifting of running the individual experiments. They output a directory of model checkpoint files, and a log of the training process.
 
-## `checkpoing_checker.py`
+## `checkpoint_checker.py`
 The file `checkpoint_checker.py` is a script used to examine all the checkpoints created by a single experiment, and choose the best one.
 
 ## `checkpoints.py`
@@ -41,7 +41,7 @@ There are 4 neural network models used in these experiments. They include a 1, 2
 Next we will walk you through running the experiments.
 
 # Experiments
-The experiments involve 1) training an unsupervised model, a stacked convolutional auto encoder as described in the paper, and 2) training supervised convolutional neural networks, with various regulization techniques.
+The experiments involve 1) training an unsupervised model, a stacked convolutional auto encoder as described in the paper, and 2) training supervised convolutional neural networks, with various regularization techniques.
 
 We will first describe how to train the unsupervised model, and then how to run the supervised experiments.
 
@@ -91,9 +91,9 @@ For a given layer L:
 # Supervised Training
 
 Now that you have successfully trained the convolutional autoencoder, you are
-ready to train the four supervised cnns. The four folders starting `cnn_` 
+ready to train the four supervised cnns. The four folders starting with `cnn_` 
 each contain a `train.py` file which will train the cnn subject to the 
-regularizations described in the folder suffix. 
+regularizations described in the folder's suffix. 
 
 For example, `cnn_ad` will train a cnn from a random intialzation with data augmentation and dropout, according to the legend given above. 
 
