@@ -23,11 +23,11 @@ how to run the experiments.
 # Folder contents
 The folder contains:
 ``` shell
-\cae
-\50_to_1
-\10_to_1
-\5_to_1
-\1_to_1
+/cae
+/50_to_1
+/10_to_1
+/5_to_1
+/1_to_1
 checkpoint_checker.py
 checkpoints.py
 models.py
@@ -35,21 +35,21 @@ models.py
 
 The cae folder contains:
 ``` shell
-\layer1\train.py
-\layer2\train.py
-\layer3\train.py
+/layer1/train.py
+/layer2/train.py
+/layer3/train.py
 ```
 
 And each ratio folder contains:
 ``` shell
-\cnn\train.py
-\cnn_a\train.py
-\cnn_d\train.py
-\cnn_u\train.py
-\cnn_ad\train.py
-\cnn_au\train.py
-\cnn_du\train.py
-\cnn_adu\train.py
+/cnn/train.py
+/cnn_a/train.py
+/cnn_d/train.py
+/cnn_u/train.py
+/cnn_ad/train.py
+/cnn_au/train.py
+/cnn_du/train.py
+/cnn_adu/train.py
 ```
 
 ## `train.py`
