@@ -13,6 +13,7 @@ And with three types of regularization which are denoted as follows:
 
 + a = Data Augmentation
 + d = Dropout
+B
 + u = Unsupervised Pre-training (with cae)
 
 
@@ -54,7 +55,7 @@ And each ratio folder contains:
 ## `train.py`
 As you can see, there are several `train.py` files. Each one trains either a cae model (with 1, 2, or 3 layers), or a cnn model with various unsupervised to supervised data ratios and regulization methods turned on. Basically the `train.py` files do all the heavy lifting of running the individual experiments. They output a directory of model checkpoint files, and a log of the training process.
 
-## `checkpoing_checker.py`
+## `checkpoint_checker.py`
 The file `checkpoint_checker.py` is a script used to examine all the checkpoints created by a single experiment, and choose the best one.
 
 ## `checkpoints.py`
@@ -151,14 +152,5 @@ checkpoints found in `./cnn_ad/checkpoints_0/` and compute the accuracy on
 the test set. It will then select the checkpoint that yielded the highest
 accuracy. The command also writes all of the results to a text file called 
 `cnn_ad_best_performance_split_0.txt`. 
-
-
-# Results
-
-If you are able to run through all of these steps successfully, you will
-hopefully obtain results similar to ours:
-
-(INSERT CIFAR-10 TABLE FROM PAPER HERE).
-
 
 [CIFAR-10]:http://www.cs.toronto.edu/~kriz/cifar.html
