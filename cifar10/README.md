@@ -22,20 +22,37 @@ how to run the experiments.
 # Folder contents
 The folder contains:
 ``` shell
-\cae\layer1\train.py
-\cae\layer2\train.py
-\cae\layer3\train.py
-\cnn_ad\train.py
-\cnn_adc\train.py
-\cnn_adcu\train.py
-\cnn_adu\train.py
+\cae
+\50_to_1
+\10_to_1
+\5_to_1
+\1_to_1
 checkpoint_checker.py
 checkpoints.py
 models.py
 ```
 
+The cae folder contains:
+``` shell
+\layer1\train.py
+\layer2\train.py
+\layer3\train.py
+```
+
+And each ratio folder contains:
+``` shell
+\cnn\train.py
+\cnn_a\train.py
+\cnn_d\train.py
+\cnn_u\train.py
+\cnn_ad\train.py
+\cnn_au\train.py
+\cnn_du\train.py
+\cnn_adu\train.py
+```
+
 ## `train.py`
-As you can see, there are several `train.py` files. Each one trains either a cae model (with 1, 2, or 3 layers), or a cnn model with various regulization methods turned on. Basically the `train.py` files do all the heavy lifting of running the individual experiments. They output a directory of model checkpoint files, and a log of the training process.
+As you can see, there are several `train.py` files. Each one trains either a cae model (with 1, 2, or 3 layers), or a cnn model with various unsupervised to supervised data ratios and regulization methods turned on. Basically the `train.py` files do all the heavy lifting of running the individual experiments. They output a directory of model checkpoint files, and a log of the training process.
 
 ## `checkpoing_checker.py`
 The file `checkpoint_checker.py` is a script used to examine all the checkpoints created by a single experiment, and choose the best one.
@@ -114,12 +131,7 @@ python -u train.py --split 0  \
 > log0.txt & 
 ```
 
-Since the [STL-10][STL-10] datsaet asks that people train their models on 10 
-pre-specified splits and average the results, the `--split` option indicates 
-which of the 10 splits to use (0-9) when traning. The code will save the `.pkl` 
-file containing the network parameters to a directory called `./checkpoints_0/` 
-which will denote the split used.
-
+Since the [CIFAR-10][CIFAR-10] datsaet asks that people train their models on 10  pre-specified splits and average the results, the `--split` option indicates  which of the 10 splits to use (0-9) when traning. The code will save the `.pkl` file containing the network parameters to a directory called `./checkpoints_0/` which will denote the split used.
 
 # Evaluation
 
@@ -146,7 +158,7 @@ accuracy. The command also writes all of the results to a text file called
 If you are able to run through all of these steps successfully, you will
 hopefully obtain results similar to ours:
 
-(INSERT STL-10 TABLE (Table 3) FROM PAPER HERE).
+(INSERT CIFAR-10 TABLE FROM PAPER HERE).
 
 
 [CIFAR-10]:http://www.cs.toronto.edu/~kriz/cifar.html
