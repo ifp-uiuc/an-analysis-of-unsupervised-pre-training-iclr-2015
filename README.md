@@ -7,7 +7,7 @@ The experiments are split into two sections:
 
 The `README.md` file in each folder will give you more information about running experiments.
 
-The experiments are written in python, and require open source software to run, including:
+The experiments are written in python 2.7, and require open source software to run, including:
 + [theano][theano]
 + [pylearn2][pylearn2] currently these dependencies are relatively small, and we may remove them to limit the number of dependencies.
 + [anna][anna]
