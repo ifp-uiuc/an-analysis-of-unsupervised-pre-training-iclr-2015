@@ -13,13 +13,13 @@ how to run the experiments.
 # Folder contents
 The folder contains:
 ``` shell
-\cae\layer1\train.py
-\cae\layer2\train.py
-\cae\layer3\train.py
-\cnn_ad\train.py
-\cnn_adc\train.py
-\cnn_adcu\train.py
-\cnn_adu\train.py
+/cae/layer1/train.py
+/cae/layer2/train.py
+/cae/layer3/train.py
+/cnn_ad/train.py
+/cnn_adc/train.py
+/cnn_adcu/train.py
+/cnn_adu/train.py
 checkpoint_checker.py
 checkpoints.py
 models.py
@@ -95,7 +95,7 @@ ready to train the four supervised cnns. The four folders starting with `cnn_`
 each contain a `train.py` file which will train the cnn subject to the 
 regularizations described in the folder's suffix. 
 
-For example, `cnn_ad` will train a cnn from a random intialzation with data augmentation and dropout, according to the legend given above. 
+For example, `cnn_ad` will train a cnn from a random initialization with data augmentation and dropout, according to the legend given above. 
 
 
 You can train the cnn with following command: 
@@ -107,7 +107,7 @@ python -u train.py --split 0  \
 
 Since the [STL-10][STL-10] datsaet asks that people train their models on 10 
 pre-specified splits and average the results, the `--split` option indicates 
-which of the 10 splits to use (0-9) when traning. The code will save the `.pkl` 
+which of the 10 splits to use (0-9) when training. The code will save the `.pkl` 
 file containing the network parameters to a directory called `./checkpoints_0/` 
 which will denote the split used.
 
@@ -116,28 +116,20 @@ which will denote the split used.
 
 After you have trained a split to completion, you can find the best performing
 checkpoint by running the checkpoint evaluator found in 
-`find_best_performance.py`. We will use the model trained in `cnn_ad` as an 
+`checkpoint_checker.py`. We will use the model trained in `cnn_ad` as an 
 example. Simply run the following command:
 
 ``` shell
 $ THEANO_FLAGS='floatX=float32,device=gpu0,nvcc.fastmath=True' \ 
-python -u find_best_performance.py --split 0 ./cnn_ad/checkpoints_0/ \
+python -u checkpoint_checker.py --split 0 ./cnn_ad/checkpoints_0/ \
 > cnn_ad_best_performance_split_0.txt &
 ```
 
-With this command, `find_best_peformance.py` will iterate over the list of
+With this command, `checkpoint_checker.py` will iterate over the list of
 checkpoints found in `./cnn_ad/checkpoints_0/` and compute the accuracy on 
 the test set. It will then select the checkpoint that yielded the highest
 accuracy. The command also writes all of the results to a text file called 
 `cnn_ad_best_performance_split_0.txt`. 
-
-
-# Results
-
-If you are able to run through all of these steps successfully, you will
-hopefully obtain results similar to ours:
-
-(INSERT STL-10 TABLE (Table 3) FROM PAPER HERE).
 
 
 [STL-10]:http://cs.stanford.edu/~acoates/stl10/
