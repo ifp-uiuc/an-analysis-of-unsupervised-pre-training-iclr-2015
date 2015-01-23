@@ -34,6 +34,14 @@ Thus, for a given ratio, the experiments are as follows:
 7. cnn_du - CNN + dropout + unsupervised initialization
 8. cnn_adu - CNN + data augmentation + dropout + unsupervised initialization
 
+We recommend training the convolutional autoencoder (cae) first before 
+proceeding to supervised experiments. They are listed below:
+
+1. [ ] cae - layer 1
+2. [ ] cae - layer 2
+3. [ ] cae - layer 3
+
+
 ## Complete Checklist
 
 For your reference, we provide a checklist of all 32 experiments in the cifar10 directory below (sorted by ratio):
