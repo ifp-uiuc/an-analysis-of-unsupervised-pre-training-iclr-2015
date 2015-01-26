@@ -61,17 +61,17 @@ The other folders correspond to the ratios described above. Each folder contains
 
 The folder name describes which regularization techniques are used, based on the legend above.
 
-### `train.py`
+#### `train.py`
 As you can see, there are several `train.py` files. Each one trains either a cae model (with 1, 2, or 3 layers), or a cnn model with various unsupervised to supervised data ratios and regularization methods turned on. Basically the `train.py` files do all the heavy lifting of running the individual experiments. They output a directory of model checkpoint files, and a log of the training process.
 
-### `checkpoint_checker.py`
+#### `checkpoint_checker.py`
 The file `checkpoint_checker.py` is a script used to examine all the checkpoints created by a single experiment, and choose the best one.
 
-### `checkpoints.py`
+#### `checkpoints.py`
 Some of the experiments involve loading in pre-trained model checkpoints. The paths to those checkpoints will be inserted in `checkpoints.py`. The `train.py`
 files will use these paths to load the checkpoints, and take care of the rest.
 
-### `models.py`
+#### `models.py`
 There are 4 neural network models used in these experiments. They include a 1, 2, and 3 layer cae, and a cnn with 3 convolutional layers. The code to construct these models is in `models.py`. They are used by the `train.py` files.
 
 Next we will walk you through running the experiments.
