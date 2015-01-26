@@ -92,6 +92,7 @@ We describe how to run those steps below.
 In order to train the 1 layer cae, first navigate to `./cae/unsupervised_layer1/`, and in the terminal, run the `train.py` script by typing:
 
 ``` shell
+# Snippet: unsupervised training
 $ THEANO_FLAGS='floatX=float32,device=gpu0,nvcc.fastmath=True' \
 python -u train.py \
 > log.txt & 
@@ -137,6 +138,7 @@ First, navigate to `./50_to_1/cnn`. You can then begin training the network
 with following command: 
 
 ``` shell
+# Snippet: supervised training
 $ THEANO_FLAGS='floatX=float32,device=gpu0,nvcc.fastmath=True' \ 
 python -u train.py  \ 
 > log.txt & 
@@ -154,6 +156,7 @@ performing checkpoint by running the checkpoint evaluator found in
 example. Simply run the following command:
 
 ``` shell
+# Snippet: supervised evaluation
 $ THEANO_FLAGS='floatX=float32,device=gpu0,nvcc.fastmath=True' \ 
 python -u checkpoint_checker.py ./50_to_1/cnn/checkpoints/ \
 > cnn_best_performance.txt &
