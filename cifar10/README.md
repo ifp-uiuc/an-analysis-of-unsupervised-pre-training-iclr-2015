@@ -15,7 +15,6 @@ And with three types of regularization which are denoted as follows:
 + d = Dropout
 + u = Unsupervised Pre-training (with cae)
 
-
 We will first describe the contents of this folder, and then walk you through
 how to run the experiments.
 
@@ -39,7 +38,7 @@ The cae folder contains:
 /layer3/train.py
 ```
 
-And each ratio folder contains:
+The other folders correspond to the ratios described above. Each folder contains:
 ``` shell
 /cnn/train.py
 /cnn_a/train.py
@@ -50,6 +49,8 @@ And each ratio folder contains:
 /cnn_du/train.py
 /cnn_adu/train.py
 ```
+
+The folder name describes which regularization techniques are used, based on the legend above.
 
 ## `train.py`
 As you can see, there are several `train.py` files. Each one trains either a cae model (with 1, 2, or 3 layers), or a cnn model with various unsupervised to supervised data ratios and regularization methods turned on. Basically the `train.py` files do all the heavy lifting of running the individual experiments. They output a directory of model checkpoint files, and a log of the training process.
