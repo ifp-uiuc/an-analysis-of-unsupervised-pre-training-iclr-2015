@@ -60,7 +60,7 @@ We train the cae in a greedy fashion. First we train a cae with 1 convolutional 
 
 We describe how to run those steps below.
 
-## How to train layer 1
+### How to train layer 1
 
 In order to train the 1 layer cae, first navigate to `./cae/unsupervised_layer1/`, and in the terminal, run the `train.py` script by typing:
 
@@ -84,7 +84,7 @@ top-level directory and set `unsupervised_layer1` equal to the path of the
 desired checkpoint in `./cae/unsupervised_layer1/checkpoints` folder. 
 (WRITE CODE TO AUTOMATICALLY SELECT A CHECKPOINT).
 
-## How to train layers 2 and 3
+### How to train layers 2 and 3
 
 When training the second and third layer, the process is almost identical
 to training the first. The process can be broken down into three repeatable 
@@ -146,5 +146,7 @@ accuracy. The command also writes all of the results to a text file called
 `cnn_ad_best_performance_split_0.txt`. 
 
 ### How to train the rest of the cnns
+
+(Write something here)
 
 [STL-10]:http://cs.stanford.edu/~acoates/stl10/
