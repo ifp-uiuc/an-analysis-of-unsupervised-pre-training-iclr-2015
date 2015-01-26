@@ -7,13 +7,12 @@ This folder contains the code used to obtain our results on the [CIFAR-10][CIFAR
 + 5:1
 + 1:1
 
-> :pushpin: **Note:** the amount of training images in CIFAR-10 is 50,000. We create our unsupservised to supervised ratio by keeping the number of unsupervised training samples fixed to 50,000, and shrinking our number of supervised samples uniformally across classes.
+> :pushpin: **Note:** the amount of training images in CIFAR-10 is 50,000. We create our unsupservised to supervised ratio by keeping the number of unsupervised training samples fixed to 50,000, and shrinking our number of supervised samples uniformly across classes.
 
 And with three types of regularization which are denoted as follows:
 
 + a = Data Augmentation
 + d = Dropout
-B
 + u = Unsupervised Pre-training (with cae)
 
 
@@ -53,7 +52,7 @@ And each ratio folder contains:
 ```
 
 ## `train.py`
-As you can see, there are several `train.py` files. Each one trains either a cae model (with 1, 2, or 3 layers), or a cnn model with various unsupervised to supervised data ratios and regulization methods turned on. Basically the `train.py` files do all the heavy lifting of running the individual experiments. They output a directory of model checkpoint files, and a log of the training process.
+As you can see, there are several `train.py` files. Each one trains either a cae model (with 1, 2, or 3 layers), or a cnn model with various unsupervised to supervised data ratios and regularization methods turned on. Basically the `train.py` files do all the heavy lifting of running the individual experiments. They output a directory of model checkpoint files, and a log of the training process.
 
 ## `checkpoint_checker.py`
 The file `checkpoint_checker.py` is a script used to examine all the checkpoints created by a single experiment, and choose the best one.
@@ -63,12 +62,12 @@ Some of the experiments involve loading in pre-trained model checkpoints. The pa
 files will use these paths to load the checkpoints, and take care of the rest.
 
 ## `models.py`
-There are 4 neural network models used in these experiments. They include a 1, 2, and 3 layer cae, and a cnn with 3 convolutional layers. They code to construct these models is in `models.py`. They are used by the `train.py` files.
+There are 4 neural network models used in these experiments. They include a 1, 2, and 3 layer cae, and a cnn with 3 convolutional layers. The code to construct these models is in `models.py`. They are used by the `train.py` files.
 
 Next we will walk you through running the experiments.
 
 # Experiments
-The experiments involve 1) training an unsupervised model, a stacked convolutional auto encoder as described in the paper, and 2) training supervised convolutional neural networks, with various regulization techniques.
+The experiments involve 1) training an unsupervised model, a stacked convolutional auto encoder as described in the paper, and 2) training supervised convolutional neural networks, with various regularization techniques.
 
 We will first describe how to train the unsupervised model, and then how to run the supervised experiments.
 
@@ -128,29 +127,31 @@ For example, `cnn_ad` will train a cnn from a random intialzation with data augm
 You can train the cnn with following command: 
 ``` shell
 $ THEANO_FLAGS='floatX=float32,device=gpu0,nvcc.fastmath=True' \ 
-python -u train.py --split 0  \ 
-> log0.txt & 
+python -u train.py  \ 
+> log.txt & 
 ```
-
-Since the [CIFAR-10][CIFAR-10] datsaet asks that people train their models on 10  pre-specified splits and average the results, the `--split` option indicates  which of the 10 splits to use (0-9) when traning. The code will save the `.pkl` file containing the network parameters to a directory called `./checkpoints_0/` which will denote the split used.
+This time, the `log.txt` file will output the classification error of a 
+minibatch after every 10 iterations. Test batches are denoted with an '&' sign. 
+The code will also generate a folder called `checkpoints` where it will save a 
+.pkl file containing the fine-tuned weights.
 
 # Evaluation
 
-After you have trained a split to completion, you can find the best performing
-checkpoint by running the checkpoint evaluator found in 
-`find_best_performance.py`. We will use the model trained in `cnn_ad` as an 
+After you have trained the network to completion, you can find the best 
+performing checkpoint by running the checkpoint evaluator found in 
+`checkpoint_checker.py`. We will use the model trained in `cnn_ad` as an 
 example. Simply run the following command:
 
 ``` shell
 $ THEANO_FLAGS='floatX=float32,device=gpu0,nvcc.fastmath=True' \ 
-python -u find_best_performance.py --split 0 ./cnn_ad/checkpoints_0/ \
-> cnn_ad_best_performance_split_0.txt &
+python -u checkpoint_checker.py ./50_to_1/cnn_ad/checkpoints/ \
+> cnn_ad_best_performance.txt &
 ```
 
-With this command, `find_best_peformance.py` will iterate over the list of
-checkpoints found in `./cnn_ad/checkpoints_0/` and compute the accuracy on 
-the test set. It will then select the checkpoint that yielded the highest
+With this command, `checkpoint_checker.py` will iterate over the list of
+checkpoints found in `./50_to_1/cnn_ad/checkpoints_0/` and compute the accuracy
+ on the test set. It will then select the checkpoint that yielded the highest
 accuracy. The command also writes all of the results to a text file called 
-`cnn_ad_best_performance_split_0.txt`. 
+`cnn_ad_best_performance.txt`. 
 
 [CIFAR-10]:http://www.cs.toronto.edu/~kriz/cifar.html
