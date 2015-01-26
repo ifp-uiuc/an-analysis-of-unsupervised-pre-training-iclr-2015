@@ -1,6 +1,9 @@
 # Contents
 + [Cifar-10 Experiments](#cifar-10-experiments)
-  + [folder contents](#folder-contents)
+  + [Folder contents](#folder-contents)
++ [Experiments](#experiments)
+  + [Unsupervised training](#unsupervised-training)
+  + [Supervised training](#supervised-training)
 
 # Cifar-10 Experiments
 
