@@ -8,7 +8,7 @@ The experiments are split into two sections:
 The `README.md` file in each folder will give you more information about running experiments.
 
 The experiments are written in python 2.7, and require open source software to run, including:
-+ [numpy][numpy]
++ [numpy][numpy], a standard numerical computing library for python.
 + [anna][anna], our library for quickly design new neural networks, which itself depends on [theano][theano] and [pylearn2][pylearn2]. The pylearn dependencies are relatively small, and we may remove them to limit the number of dependencies.
 
 [numpy]:http://www.numpy.org/
