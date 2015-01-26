@@ -1,3 +1,6 @@
 First Header  |
 ------------- |
-Content Cell  |
+``` python
+def function():
+    print 5
+``` |  
