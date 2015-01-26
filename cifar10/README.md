@@ -1,11 +1,13 @@
+# Running the CIFAR-10 analysis experiments
+
 # Contents
-+ [Cifar-10 Experiments](#cifar-10-experiments)
++ [Introduction](#introduction)
   + [Folder contents](#folder-contents)
-+ [Experiments](#experiments)
++ [Running experiments](#running-experiments)
   + [Unsupervised training](#unsupervised-training)
   + [Supervised training](#supervised-training)
 
-# Cifar-10 Experiments
+# Introduction
 
 This folder contains the code used to obtain our results on the [CIFAR-10][CIFAR-10] dataset. This involves training a convolutional autoencoder (cae), and then training convolutional neural network (cnn) with four unsupervised to supervised training data ratios:
 
@@ -74,7 +76,7 @@ There are 4 neural network models used in these experiments. They include a 1, 2
 
 Next we will walk you through running the experiments.
 
-# Experiments
+# Running experiments
 The experiments involve 1) training an unsupervised model, a stacked convolutional auto encoder as described in the paper, and 2) training supervised convolutional neural networks, with various regularization techniques.
 
 We will first describe how to train the unsupervised model, and then how to run the supervised experiments.
