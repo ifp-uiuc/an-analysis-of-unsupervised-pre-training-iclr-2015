@@ -1,3 +1,7 @@
+# Contents
++ [Cifar-10 Experiments](#cifar-10-experiments)
+  + [folder contents](#folder-contents)
+
 # Cifar-10 Experiments
 
 This folder contains the code used to obtain our results on the [CIFAR-10][CIFAR-10] dataset. This involves training a convolutional autoencoder (cae), and then training convolutional neural network (cnn) with four unsupervised to supervised training data ratios:
