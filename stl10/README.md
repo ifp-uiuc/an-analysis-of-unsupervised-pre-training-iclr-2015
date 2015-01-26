@@ -1,7 +1,6 @@
 # Running the STL-10 experiments
 
 # Contents
-# Contents
 + [Introduction](#introduction)
   + [Folder contents](#folder-contents)
 + [Running experiments](#running-experiments)
