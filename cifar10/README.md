@@ -135,7 +135,7 @@ minibatch after every 10 iterations. Test accuracies are denoted with an '&' sig
 The code will also generate a folder called `checkpoints` where it will save a 
 .pkl file containing the fine-tuned weights.
 
-## Evaluation
+### Evaluation
 
 After you have trained the network to completion, you can find the best 
 performing checkpoint by running the checkpoint evaluator found in 
