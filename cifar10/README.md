@@ -129,6 +129,8 @@ ready to run the supervised regularization experiments for different data
 ratios. We will begin by walking you through an experiment in the 50_to_1 
 folder, specifically, a cnn with no regularization. 
 
+### How to train a cnn with no regularization
+
 First, navigate to `./50_to_1/cnn`. You can then begin training the network
 with following command: 
 
@@ -142,7 +144,7 @@ minibatch after every 10 iterations. Test accuracies are denoted with an '&' sig
 The code will also generate a folder called `checkpoints` where it will save a 
 .pkl file containing the fine-tuned weights.
 
-### Evaluation
+### How to evaluate a cnn with no regularization
 
 After you have trained the network to completion, you can find the best 
 performing checkpoint by running the checkpoint evaluator found in 
@@ -160,6 +162,8 @@ checkpoints found in `./50_to_1/cnn/checkpoints/` and compute the accuracy
  on the test set. It will then select the checkpoint that yielded the highest
 accuracy. The command also writes all of the results to a text file called 
 `cnn_best_performance.txt`. 
+
+### How to train the rest of the cnns
 
 Now, for a given data ratio (R), if you want to train a network with specific regularizations active, the process is very simple. 
 
