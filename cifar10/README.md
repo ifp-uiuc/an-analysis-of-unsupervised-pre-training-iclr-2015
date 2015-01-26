@@ -118,21 +118,20 @@ For a given layer L:
 ## Supervised Training
 
 Now that you have successfully trained the convolutional autoencoder, you are
-ready to train the four supervised cnns. The four folders starting `cnn_` 
-each contain a `train.py` file which will train the cnn subject to the 
-regularizations described in the folder suffix. 
+ready to run the supervised regularization experiments for different data 
+ratios. We will begin by walking you through an experiment in the 50_to_1 
+folder, specifically, a cnn with no regularization. 
 
-For example, `cnn_ad` will train a cnn from a random intialzation with data augmentation and dropout, according to the legend given above. 
+First, navigate to `./50_to_1/cnn`. You can then begin training the network
+with following command: 
 
-
-You can train the cnn with following command: 
 ``` shell
 $ THEANO_FLAGS='floatX=float32,device=gpu0,nvcc.fastmath=True' \ 
 python -u train.py  \ 
 > log.txt & 
 ```
 This time, the `log.txt` file will output the classification error of a 
-minibatch after every 10 iterations. Test batches are denoted with an '&' sign. 
+minibatch after every 10 iterations. Test accuracies are denoted with an '&' sign. 
 The code will also generate a folder called `checkpoints` where it will save a 
 .pkl file containing the fine-tuned weights.
 
@@ -140,19 +139,27 @@ The code will also generate a folder called `checkpoints` where it will save a
 
 After you have trained the network to completion, you can find the best 
 performing checkpoint by running the checkpoint evaluator found in 
-`checkpoint_checker.py`. We will use the model trained in `cnn_ad` as an 
+`checkpoint_checker.py`. We will use the model trained in `./50_to_1/cnn` as an 
 example. Simply run the following command:
 
 ``` shell
 $ THEANO_FLAGS='floatX=float32,device=gpu0,nvcc.fastmath=True' \ 
-python -u checkpoint_checker.py ./50_to_1/cnn_ad/checkpoints/ \
-> cnn_ad_best_performance.txt &
+python -u checkpoint_checker.py ./50_to_1/cnn/checkpoints/ \
+> cnn_best_performance.txt &
 ```
 
 With this command, `checkpoint_checker.py` will iterate over the list of
-checkpoints found in `./50_to_1/cnn_ad/checkpoints_0/` and compute the accuracy
+checkpoints found in `./50_to_1/cnn/checkpoints/` and compute the accuracy
  on the test set. It will then select the checkpoint that yielded the highest
 accuracy. The command also writes all of the results to a text file called 
-`cnn_ad_best_performance.txt`. 
+`cnn_best_performance.txt`. 
+
+Now, for a given data ratio (R), if you want to train a network with specific regularizations active, the process is very simple. 
+
+1. Using the legend above, create a suffix string (S) that corresponds to the 
+   regularizations you wish to impose. 
+2. Go to the `./R/cnn_S/` folder.
+3. Run the `train.py` file as shown in the Superivsed Training section.
+
 
 [CIFAR-10]:http://www.cs.toronto.edu/~kriz/cifar.html
