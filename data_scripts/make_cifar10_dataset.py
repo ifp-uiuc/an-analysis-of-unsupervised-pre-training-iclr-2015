@@ -4,8 +4,6 @@ import cPickle as pickle
 
 import numpy
 
-from pylearn2.datasets import cifar10, dense_design_matrix
-
 
 def download_cifar10(output_path):
     os.system('wget http://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz')
@@ -18,22 +16,85 @@ def download_cifar10(output_path):
     os.chdir(cur_dir)
 
 
-def load_dataset():
-    dataset = cifar10.CIFAR10(which_set='train',
-                              center=False,
-                              rescale=True,
-                              axes=['c', 0, 1, 'b'])
-    return dataset
+def unpickle(file_path):
+    # This function unpickles a file and returns a dictionary
+    # Credit: Alex Krizhevsky
+    # http://www.cs.toronto.edu/~kriz/cifar.html
+    fo = open(file_path, 'rb')
+    dict = pickle.load(fo)
+    fo.close()
+    return dict
 
 
-def reduce_dataset(dataset, N, output_path):
+def load_batch(path, filename, batch_shape):
+    print 'Loading: ', filename
+    batch_dict = unpickle(os.path.join(path, filename))
+    batch_data = batch_dict['data']
+    batch_data = numpy.reshape(batch_data, batch_shape)
+    batch_labels = numpy.asarray(batch_dict['labels']).astype('uint8')
+    return batch_data, batch_labels
 
-    print 'Making dataset with %d samples per class (%d samples total)' \
-          % (N, N * 10)
-    X = dataset.X
-    y = dataset.y
-    view_converter = dense_design_matrix.DefaultViewConverter((32, 32, 3),
-                                                              ['c', 0, 1, 'b'])
+
+def load_dataset(path, center=False, rescale=True):
+    path = os.path.join(path, 'cifar-10-batches-py')
+    num_channels, width, height = (3, 32, 32)
+    num_train_samples = 50000
+    num_test_samples = 10000
+    num_batch_samples = 10000
+    batch_shape = (num_batch_samples, num_channels, width, height)
+
+    ## Load CIFAR-10 train data
+    train_X = numpy.zeros((num_train_samples, num_channels,
+                           width, height), dtype='uint8')
+    train_y = numpy.zeros((num_train_samples), dtype='uint8')
+    test_X = numpy.zeros((num_test_samples, num_channels,
+                          width, height), dtype='uint8')
+    test_y = numpy.zeros((num_test_samples), dtype='uint8')
+
+    for i in range(0, 5):
+        filename = 'data_batch_%d' % (i+1)
+        batch_data, batch_labels = load_batch(path, filename, batch_shape)
+        batch_slice = slice(i*num_batch_samples, (i+1)*num_batch_samples)
+        train_X[batch_slice, :, :, :] = batch_data
+        train_y[batch_slice] = batch_labels
+
+    ## Load CIFAR-10 test data
+    filename = 'test_batch'
+    test_X, test_y = load_batch(path, filename, batch_shape)
+
+    # Check preprocessing options
+    train_X = numpy.cast['float32'](train_X)
+    test_X = numpy.cast['float32'](test_X)
+
+    if center:
+        train_X -= 127.5
+        test_X -= 127.5
+
+    if rescale:
+        train_X /= 255
+        test_X /= 255
+
+    return train_X, train_y, test_X, test_y
+
+
+def convert_dataset(path):
+    #path = os.path.join(path, 'cifar-10-batches-py')
+    train_X, train_y, test_X, test_y = load_dataset(path)
+
+    print 'Saving data to .npy files.'
+    numpy.save(os.path.join(path, 'train_X.npy'), train_X)
+    numpy.save(os.path.join(path, 'train_y.npy'), train_y)
+    numpy.save(os.path.join(path, 'test_X.npy'), test_X)
+    numpy.save(os.path.join(path, 'test_y.npy'), test_y)
+
+
+def reduce_dataset(output_path, N):
+    print 'Constructing reduced CIFAR-10 dataset'
+    print '%d samples total - (%d samples/class)' % (N*10, N)
+
+    # Load cifar-10 training data
+    X = numpy.load(os.path.join(output_path, 'train_X.npy'))
+    y = numpy.load(os.path.join(output_path, 'train_y.npy'))
 
     output_path += '/cifar10_'+str(N)
     if not os.path.exists(output_path):
@@ -42,7 +103,6 @@ def reduce_dataset(dataset, N, output_path):
     num_classes = len(numpy.unique(y))
     rng_seeds = [0]
     for i, seed in enumerate(rng_seeds):
-
         print 'Seed = %d' % seed
         numpy.random.seed(seed)
         X_all = []
@@ -64,24 +124,14 @@ def reduce_dataset(dataset, N, output_path):
 
         X_all = numpy.concatenate(X_all, axis=0)
         y_all = numpy.int32(numpy.concatenate(y_all, axis=0))
-        print X_all.shape
-        print y_all.shape
-        print y_all.dtype
 
-        reduced_dataset = dense_design_matrix.DenseDesignMatrix(
-            X=X_all,
-            y=y_all,
-            view_converter=view_converter,
-            y_labels=num_classes)
-        print reduced_dataset.X.shape
-        print reduced_dataset.y.shape
-        print '\n'
-
+        # Saving data out to .npy files.
         reduced_dataset_filename = os.path.join(output_path,
-                                                'split_'+str(seed)+'.pkl')
-        f = open(reduced_dataset_filename, 'wb')
-        pickle.dump(reduced_dataset, f)
-        f.close()
+                                                'train_X_split_'+str(seed))
+        reduced_labels_filename = os.path.join(output_path,
+                                               'train_y_split_'+str(seed))
+        numpy.save(reduced_dataset_filename, X_all)
+        numpy.save(reduced_labels_filename, y_all)
 
 
 if __name__ == "__main__":
@@ -93,6 +143,9 @@ if __name__ == "__main__":
     parser.add_argument('-d', '--download', action='store_true',
                         help='Flag specifying whether to download the dataset \
                               from the web or not.')
+    parser.add_argument('-c', '--convert', action='store_true',
+                        help='Flag specifying whether to load the dataset, \
+                              convert it to .npy files and save it .')
     parser.add_argument('-r', '--reduce', action='store_true',
                         help='Flag specifying whether to reduce the size of \
                               training set to create sets of size 1000, 5000, \
@@ -109,10 +162,12 @@ if __name__ == "__main__":
 
     print args
     download_flag = args.download
+    convert_flag = args.convert
     reduce_flag = args.reduce
     output_path = args.output_path
 
     print 'Download flag: ', download_flag
+    print 'Convert flag: ', convert_flag
     print 'Reduce flag: ', reduce_flag
     print 'Output path: ', output_path
 
@@ -123,13 +178,13 @@ if __name__ == "__main__":
         print '\nDownloading CIFAR-10 data from the web.'
         download_cifar10(output_path)
 
-    # load the dataset
-    print '\nLoading the dataset.'
-    dataset = load_dataset()
+    # load/convert the dataset
+    if convert_flag:
+        print '\nLoading the dataset.'
+        dataset = convert_dataset(output_path)
 
     if reduce_flag:
         # construct reduced versions of the training set
-        print '\nMaking reduced dataset.'
-        reduce_dataset(dataset, 100, output_path)
-        reduce_dataset(dataset, 500, output_path)
-        reduce_dataset(dataset, 1000, output_path)
+        reduce_dataset(output_path, 100)
+        reduce_dataset(output_path, 500)
+        reduce_dataset(output_path, 1000)

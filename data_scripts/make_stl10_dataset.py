@@ -17,59 +17,69 @@ def download_stl10(output_path):
     os.chdir(cur_dir)
 
 
-def convert_stl10(output_path):
-    print 'Convert STL-10 .mat files to .npy files.'
-
+def load_save_unlabeled_data(path):
     print 'Loading the unlabled data.'
-    D_u = h5py.File(os.path.join(output_path, 'unlabeled.mat'))
+    D_u = h5py.File(os.path.join(path, 'unlabeled.mat'))
     print D_u.keys()
+
     X_u = numpy.array(D_u['X'])
     X_u = X_u.T
-    num_unlabeled = X_u.shape[0]
-    X_u = numpy.reshape(X_u, (num_unlabeled, 3, 96, 96))
+    num_unlabeled_samples = X_u.shape[0]
+    X_u = numpy.reshape(X_u, (num_unlabeled_samples, 3, 96, 96))
     X_u = X_u.transpose(0, 1, 3, 2)
-    print 'Saving the labeled data to .npy file.'
-    numpy.save(os.path.join(output_path, 'unsupervised.npy'), X_u)
 
-    print 'Loading the labeled training data.'
-    D_train = loadmat(os.path.join(output_path, 'train.mat'))
+    print 'Saving the labeled data to .npy file.\n'
+    numpy.save(os.path.join(path, 'unsupervised.npy'), X_u)
+
+
+def load_save_training_data(path):
+    print 'Loading the training data.'
+    D_train = loadmat(os.path.join(path, 'train.mat'))
     print D_train.keys()
+
     train_X = D_train['X']
-    num_train = train_X.shape[0]
-    train_X = numpy.reshape(train_X, (num_train, 3, 96, 96))
+    num_train_samples = train_X.shape[0]
+    train_X = numpy.reshape(train_X, (num_train_samples, 3, 96, 96))
     train_X = train_X.transpose(0, 1, 3, 2)
     train_y = D_train['y'].ravel()
-    print 'Saving the labeled training data to .npy files.'
-    numpy.save(os.path.join(output_path, 'train_X.npy'), train_X)
-    numpy.save(os.path.join(output_path, 'train_y.npy'), train_y)
-    numpy.save(os.path.join(output_path, 'train_fold_indices.npy'),
+
+    print 'Saving the labeled training data to .npy files.\n'
+    numpy.save(os.path.join(path, 'train_X.npy'), train_X)
+    numpy.save(os.path.join(path, 'train_y.npy'), train_y)
+    numpy.save(os.path.join(path, 'train_fold_indices.npy'),
                D_train['fold_indices'])
 
-    print 'Loading the labeled testing data.'
-    D_test = loadmat(os.path.join(output_path, 'test.mat'))
+
+def load_save_testing_data(path):
+    print 'Loading the testing data.'
+    D_test = loadmat(os.path.join(path, 'test.mat'))
     print D_test.keys()
+
     test_X = D_test['X']
-    num_test = test_X.shape[0]
-    test_X = numpy.reshape(test_X, (num_test, 3, 96, 96))
+    num_test_samples = test_X.shape[0]
+    test_X = numpy.reshape(test_X, (num_test_samples, 3, 96, 96))
     test_X = test_X.transpose(0, 1, 3, 2)
     test_y = D_test['y'].ravel()
-    print 'Saving the labeled test data to .npy files.'
-    numpy.save(os.path.join(output_path, 'test_X.npy'), test_X)
-    numpy.save(os.path.join(output_path, 'test_y.npy'), test_y)
+
+    print 'Saving the labeled test data to .npy files.\n'
+    numpy.save(os.path.join(path, 'test_X.npy'), test_X)
+    numpy.save(os.path.join(path, 'test_y.npy'), test_y)
+
+
+def convert_stl10(path):
+    print '\nConvert STL-10 .mat files to .npy files.'
+    load_save_unlabeled_data(path)
+    load_save_training_data(path)
+    load_save_testing_data(path)
 
 
 def split_stl10(output_path):
+    print('\nBreaking up STL10 training set into 10 splits.')
     train_X = numpy.load(os.path.join(output_path, 'train_X.npy'))
     train_y = numpy.load(os.path.join(output_path, 'train_y.npy'))
     fold_ind = numpy.load(os.path.join(output_path, 'train_fold_indices.npy'))
     fold_ind = fold_ind[0]
 
-    print train_X.shape
-    print train_y.shape
-    print fold_ind.shape
-    print '\n'
-
-    print('Breaking up STL10 training set into 10 splits.')
     #num_splits = len(fold_ind)
     for i, split in enumerate(fold_ind):
         print('Split {}: {}'.format(i, split.shape))
