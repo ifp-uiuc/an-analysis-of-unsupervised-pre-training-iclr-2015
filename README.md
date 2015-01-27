@@ -13,8 +13,6 @@ As a teaser, here is the abstract:
 > 
 > We also use unsupervised pre-training with additional color augmentation to achieve near state-of-the-art performance on STL-10.
 
----
-
 # About the repo
 
 The experiments are split into two sections:
