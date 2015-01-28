@@ -82,7 +82,7 @@ first convolutional layer.
 Once the code has run to completion, open the `checkpoints.py` file in the 
 top-level directory and set `unsupervised_layer1` equal to the path of the 
 desired checkpoint in `./cae/unsupervised_layer1/checkpoints` folder. 
-(WRITE CODE TO AUTOMATICALLY SELECT A CHECKPOINT).
+
 
 ### How to train layers 2 and 3
 
@@ -97,6 +97,24 @@ For a given layer L:
 3.  Set the `unsupervised_layer_L` variable in `checkpoints.py` to the 
 	appropriate `.pkl` file in `./cae/unsupervised_layer_L/checkpoints/`  
 
+
+### How to select a checkpoint
+
+One factor that must be considered when doing unsupervised pre-training, is 
+when to stop a given layer and start training the next. We recommend finding 
+the point where the mean squared error (MSE) stops changing at a drastic rate. 
+This is colloquially known as finding the "elbow" of the curve. Our library, 
+anna, provides a means of visualizing the MSE over time in a script called 
+`log_plotter.py`, found in the scripts directory. 
+
+The MSE values in the log.txt file can be visualized using the following
+command:
+``` shell
+$ python /path/to/anna/anna/script/log_plotter.py log.txt
+```
+This yield something like this:
+
+![elbow_curve](./elbow_curve_stl10.png =400x300)
 
 ## Supervised Training
 
