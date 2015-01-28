@@ -1,4 +1,4 @@
-# Getting the stl10 data
+# Getting the STL-10 data
 
 Here we will describe how to acquire the [STL-10][STL-10] dataset from the web
 and process it such that you can run our experiments. 
