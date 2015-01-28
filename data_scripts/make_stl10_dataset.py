@@ -122,8 +122,8 @@ if __name__ == "__main__":
                              training_fold_indices.npy.')
     parser.add_argument('-p', '--data_path', dest='data_path',
                         default='./STL10_HERE',
-                        help='Path to where the files will downloaded, \
-                        converted and saved.')
+                        help='Path to where the dataset files will be \
+                        downloaded, converted and saved.')
     #parser.add_argument('-v', action='store_true', help='Verbose')
     args = parser.parse_args()
 
