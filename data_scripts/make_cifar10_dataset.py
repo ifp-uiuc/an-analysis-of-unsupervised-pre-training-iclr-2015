@@ -71,8 +71,8 @@ def load_dataset(path, center=False, rescale=True):
         test_X -= 127.5
 
     if rescale:
-        train_X /= 255
-        test_X /= 255
+        train_X /= 127.5
+        test_X /= 127.5
 
     return train_X, train_y, test_X, test_y
 
