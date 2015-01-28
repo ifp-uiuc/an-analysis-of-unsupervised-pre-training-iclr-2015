@@ -111,6 +111,7 @@ Suppose we are training the first layer of our cae. The MSE values in the
 `log.txt` file can be visualized using the following command:
 
 ``` shell
+# Snippet: plot mse
 $ python /path/to/anna/anna/script/log_plotter.py log.txt
 ```
 This will yield something like this:
@@ -192,6 +193,13 @@ accuracy. The command also writes all of the results to a text file called
 
 ### How to train the rest of the cnns
 
-(Write something here)
+Now, if you want to train a network with specific regularizations active, 
+the process is very simple. 
+
+1. Using the legend above, create a suffix string (S) that corresponds to the 
+   regularizations you wish to impose. 
+2. Go to the `./cnn_S/` folder.
+3. Run the `train.py` file as shown in the Superivsed Training section.
+
 
 [STL-10]:http://cs.stanford.edu/~acoates/stl10/
