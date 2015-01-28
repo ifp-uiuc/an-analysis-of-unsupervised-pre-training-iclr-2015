@@ -114,7 +114,7 @@ $ python /path/to/anna/anna/script/log_plotter.py log.txt
 ```
 This yield something like this:
 
-![elbow_curve](./elbow_curve_stl10.png =400x300)
+![elbow_curve](./elbow_curve_stl10.png)
 
 ## Supervised Training
 
