@@ -3,8 +3,6 @@ import sys
 sys.path.append('../..')
 
 import numpy
-import theano
-import theano.tensor as T
 
 from anna import util
 from anna.datasets import unsupervised_dataset
@@ -69,12 +67,6 @@ monitor = util.Monitor(model, save_steps=200)
 model.conv1.trainable = False
 model._compile()
 
-# Function to compute sparsity
-output1 = theano.function([model.input.output()],
-                          T.mean(T.sum(model.conv1.output() > 0, axis=0)))
-output2 = theano.function([model.input.output()],
-                          T.mean(T.sum(model.conv2.output() > 0, axis=0)))
-
 # Loading CIFAR-10 dataset
 print('Loading Data')
 train_iterator = util.get_cifar_iterator('train',
@@ -109,7 +101,6 @@ filter_visualizer.run()
 
 #model.learning_rate_symbol.set_value(0.000005/10)
 print('Training Model')
-count = 0
 for x_batch, y_batch in train_iterator:
     monitor.start()
     x_batch = normer.run(x_batch)
@@ -117,9 +108,3 @@ for x_batch, y_batch in train_iterator:
     monitor.stop(error)
     recon_visualizer.run()
     filter_visualizer.run()
-    if count % 100 == 0:
-        sparsity_layer_1 = output1(x_batch)
-        sparsity_layer_2 = output2(x_batch)
-        print 'Sparsity (Layer 1): %.3f' % sparsity_layer_1
-        print 'Sparsity (Layer 2): %.3f' % sparsity_layer_2
-    count += 1
