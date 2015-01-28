@@ -65,21 +65,20 @@ monitor = util.Monitor(model, save_steps=200)
 
 # Loading CIFAR-10 dataset
 print('Loading Data')
-train_iterator = util.get_cifar_iterator('train',
-                                         mode='random_uniform',
-                                         batch_size=128,
-                                         num_batches=100000,
-                                         rescale=True)
+train_data = numpy.load('/data/cifar10/train_X.npy')
+test_data = numpy.load('/data/cifar10/test_X.npy')
 
-test_iterator = util.get_cifar_iterator('test',
-                                        mode='sequential',
-                                        batch_size=128,
-                                        rescale=True)
+train_dataset = unsupervised_dataset.UnsupervisedDataset(train_data)
+test_dataset = unsupervised_dataset.UnsupervisedDataset(test_data)
+train_iterator = train_dataset.iterator(
+    mode='random_uniform', batch_size=128, num_batches=100000)
+test_iterator = test_dataset.iterator(mode='sequential', batch_size=128)
 
 normer = util.Normer2(filter_size=5, num_channels=3)
 
 # Grab batch for patch extraction.
-x_batch, y_batch = train_iterator.next()
+x_batch = train_iterator.next()
+x_batch = x_batch.transpose(1, 2, 3, 0)
 x_batch = normer.run(x_batch)
 # Grab some patches to initialize weights.
 patch_grabber = util.PatchGrabber(96, 5)
@@ -87,7 +86,8 @@ patches = patch_grabber.run(x_batch)*0.01
 model.conv1.W.set_value(patches)
 
 # Grab test data to give to NormReconVisualizer.
-test_x_batch, test_y_batch = test_iterator.next()
+test_x_batch = test_iterator.next()
+test_x_batch = test_x_batch.transpose(1, 2, 3, 0)
 test_x_batch = normer.run(test_x_batch)
 recon_visualizer = util.NormReconVisualizer(model, test_x_batch, steps=100)
 recon_visualizer.run()
@@ -98,7 +98,8 @@ filter_visualizer.run()
 
 #model.learning_rate_symbol.set_value(0.000005/10)
 print('Training Model')
-for x_batch, y_batch in train_iterator:
+for x_batch in train_iterator:
+    x_batch = x_batch.transpose(1, 2, 3, 0)
     monitor.start()
     x_batch = normer.run(x_batch)
     error = model.train(x_batch)

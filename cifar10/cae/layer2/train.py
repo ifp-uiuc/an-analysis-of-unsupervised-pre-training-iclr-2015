@@ -60,7 +60,7 @@ f.write(str(pid)+'\n')
 f.close()
 
 model = CAELayer2Model('experiment', './', learning_rate=1e-5)
-checkpoint = checkpoints.unsupervised_layer_1
+checkpoint = checkpoints.unsupervised_layer1
 util.set_parameters_from_unsupervised_model(model, checkpoint)
 monitor = util.Monitor(model, save_steps=200)
 
@@ -69,16 +69,14 @@ model._compile()
 
 # Loading CIFAR-10 dataset
 print('Loading Data')
-train_iterator = util.get_cifar_iterator('train',
-                                         mode='random_uniform',
-                                         batch_size=128,
-                                         num_batches=100000,
-                                         rescale=True)
+train_data = numpy.load('/data/cifar10/train_X.npy')
+test_data = numpy.load('/data/cifar10/test_X.npy')
 
-test_iterator = util.get_cifar_iterator('test',
-                                        mode='sequential',
-                                        batch_size=128,
-                                        rescale=True)
+train_dataset = unsupervised_dataset.UnsupervisedDataset(train_data)
+test_dataset = unsupervised_dataset.UnsupervisedDataset(test_data)
+train_iterator = train_dataset.iterator(
+    mode='random_uniform', batch_size=128, num_batches=100000)
+test_iterator = test_dataset.iterator(mode='sequential', batch_size=128)
 
 normer = util.Normer2(filter_size=5, num_channels=3)
 
@@ -90,7 +88,8 @@ s = 5.0
 model.conv2.W.set_value(W2*s)
 
 # Grab test data to give to NormReconVisualizer.
-test_x_batch, test_y_batch = test_iterator.next()
+test_x_batch = test_iterator.next()
+test_x_batch = test_x_batch.transpose(1, 2, 3, 0)
 test_x_batch = normer.run(test_x_batch)
 recon_visualizer = util.NormReconVisualizer(model, test_x_batch, steps=200)
 recon_visualizer.run()
@@ -101,7 +100,8 @@ filter_visualizer.run()
 
 #model.learning_rate_symbol.set_value(0.000005/10)
 print('Training Model')
-for x_batch, y_batch in train_iterator:
+for x_batch in train_iterator:
+    x_batch = x_batch.transpose(1, 2, 3, 0)
     monitor.start()
     x_batch = normer.run(x_batch)
     error = model.train(x_batch)
