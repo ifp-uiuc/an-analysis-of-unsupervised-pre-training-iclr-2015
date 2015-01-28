@@ -68,16 +68,18 @@ def load_save_testing_data(path):
 
 def convert_stl10(path):
     print '\nConvert STL-10 .mat files to .npy files.'
+    path = os.path.join(path, 'stl10_matlab')
     load_save_unlabeled_data(path)
     load_save_training_data(path)
     load_save_testing_data(path)
 
 
-def split_stl10(output_path):
+def split_stl10(path):
     print('\nBreaking up STL10 training set into 10 splits.')
-    train_X = numpy.load(os.path.join(output_path, 'train_X.npy'))
-    train_y = numpy.load(os.path.join(output_path, 'train_y.npy'))
-    fold_ind = numpy.load(os.path.join(output_path, 'train_fold_indices.npy'))
+    path = os.path.join(path, 'stl10_matlab')
+    train_X = numpy.load(os.path.join(path, 'train_X.npy'))
+    train_y = numpy.load(os.path.join(path, 'train_y.npy'))
+    fold_ind = numpy.load(os.path.join(path, 'train_fold_indices.npy'))
     fold_ind = fold_ind[0]
 
     #num_splits = len(fold_ind)
@@ -89,13 +91,13 @@ def split_stl10(output_path):
         print train_X_split.shape
         print train_y_split.shape
 
-        train_splits_path = os.path.join(output_path, 'train_splits')
+        train_splits_path = os.path.join(path, 'train_splits')
         if not os.path.exists(train_splits_path):
             os.makedirs(train_splits_path)
 
-        train_X_split_filename = os.path.join(output_path, 'train_splits',
+        train_X_split_filename = os.path.join(path, 'train_splits',
                                               'train_X_'+str(i)+'.npy')
-        train_y_split_filename = os.path.join(output_path, 'train_splits',
+        train_y_split_filename = os.path.join(path, 'train_splits',
                                               'train_y_'+str(i)+'.npy')
 
         numpy.save(train_X_split_filename, train_X_split)
@@ -118,9 +120,10 @@ if __name__ == "__main__":
                         help='Flag specifying whether to split the training  \
                              set according to the fold defined in \
                              training_fold_indices.npy.')
-    parser.add_argument('-o', '--output_path', dest='output_path',
+    parser.add_argument('-p', '--data_path', dest='data_path',
                         default='./STL10_HERE',
-                        help='Path to save all of the output files.')
+                        help='Path to where the files will downloaded, \
+                        converted and saved.')
     #parser.add_argument('-v', action='store_true', help='Verbose')
     args = parser.parse_args()
 
@@ -132,18 +135,18 @@ if __name__ == "__main__":
     download_flag = args.download
     convert_flag = args.convert
     split_flag = args.split
-    output_path = args.output_path
+    data_path = args.data_path
 
     print 'Download flag: ', download_flag
     print 'Convert flag: ', convert_flag
     print 'Split flag: ', split_flag
-    print 'Output path: ', output_path
+    print 'Data path: ', data_path
 
     if download_flag:
-        download_stl10(output_path)
+        download_stl10(data_path)
 
     if convert_flag:
-        convert_stl10(output_path)
+        convert_stl10(data_path)
 
     if split_flag:
-        split_stl10(output_path)
+        split_stl10(data_path)

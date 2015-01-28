@@ -88,17 +88,18 @@ def convert_dataset(path):
     numpy.save(os.path.join(path, 'test_y.npy'), test_y)
 
 
-def reduce_dataset(output_path, N):
+def reduce_dataset(data_path, N):
     print 'Constructing reduced CIFAR-10 dataset'
     print '%d samples total - (%d samples/class)' % (N*10, N)
 
     # Load cifar-10 training data
-    X = numpy.load(os.path.join(output_path, 'train_X.npy'))
-    y = numpy.load(os.path.join(output_path, 'train_y.npy'))
+    X = numpy.load(os.path.join(data_path, 'train_X.npy'))
+    y = numpy.load(os.path.join(data_path, 'train_y.npy'))
 
-    output_path += '/cifar10_'+str(N)
-    if not os.path.exists(output_path):
-        os.makedirs(output_path)
+    data_path = os.path.join(data_path, 'reduced')
+    data_path = os.path.join(data_path, 'cifar10_'+str(N))
+    if not os.path.exists(data_path):
+        os.makedirs(data_path)
 
     num_classes = len(numpy.unique(y))
     rng_seeds = [0]
@@ -126,9 +127,9 @@ def reduce_dataset(output_path, N):
         y_all = numpy.int32(numpy.concatenate(y_all, axis=0))
 
         # Saving data out to .npy files.
-        reduced_dataset_filename = os.path.join(output_path,
+        reduced_dataset_filename = os.path.join(data_path,
                                                 'train_X_split_'+str(seed))
-        reduced_labels_filename = os.path.join(output_path,
+        reduced_labels_filename = os.path.join(data_path,
                                                'train_y_split_'+str(seed))
         numpy.save(reduced_dataset_filename, X_all)
         numpy.save(reduced_labels_filename, y_all)
@@ -150,9 +151,10 @@ if __name__ == "__main__":
                         help='Flag specifying whether to reduce the size of \
                               training set to create sets of size 1000, 5000, \
                               and 10000.')
-    parser.add_argument('-o', '--output_path', dest='output_path',
+    parser.add_argument('-p', '--data_path', dest='data_path',
                         default='./CIFAR10_HERE',
-                        help='Path to save all of the output files.')
+                        help='Path to download, convert and save all of the \
+                        dataset files.')
     #parser.add_argument('-v', action='store_true', help='Verbose')
     args = parser.parse_args()
 
@@ -164,27 +166,27 @@ if __name__ == "__main__":
     download_flag = args.download
     convert_flag = args.convert
     reduce_flag = args.reduce
-    output_path = args.output_path
+    data_path = args.data_path
 
     print 'Download flag: ', download_flag
     print 'Convert flag: ', convert_flag
     print 'Reduce flag: ', reduce_flag
-    print 'Output path: ', output_path
+    print 'Data path: ', data_path
 
-    # wget cifar10 data from the web
-    #destination_path = './temp'
+    data_path = os.path.join(data_path, 'cifar10')
 
+    # get cifar10 data from the web
     if download_flag:
         print '\nDownloading CIFAR-10 data from the web.'
-        download_cifar10(output_path)
+        download_cifar10(data_path)
 
     # load/convert the dataset
     if convert_flag:
         print '\nLoading the dataset.'
-        dataset = convert_dataset(output_path)
+        dataset = convert_dataset(data_path)
 
     if reduce_flag:
         # construct reduced versions of the training set
-        reduce_dataset(output_path, 100)
-        reduce_dataset(output_path, 500)
-        reduce_dataset(output_path, 1000)
+        reduce_dataset(data_path, 100)
+        reduce_dataset(data_path, 500)
+        reduce_dataset(data_path, 1000)
