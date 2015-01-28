@@ -19,7 +19,7 @@ f.write(str(pid)+'\n')
 f.close()
 
 model = CNNModel('experiment', './', learning_rate=1e-2)
-checkpoint = checkpoints.unsupervised_layer_3
+checkpoint = checkpoints.unsupervised_layer3
 util.set_parameters_from_unsupervised_model(model, checkpoint)
 monitor = util.Monitor(model)
 
