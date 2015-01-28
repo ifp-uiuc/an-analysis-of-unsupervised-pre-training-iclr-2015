@@ -167,7 +167,7 @@ Saving model checkpoint to: ./checkpoints/experiment-11m-09d-17h-46m-23s.pkl
 ```
 From this, we know then set `unsupervised_layer2` in `checkpoints.py` to:
 
-`./cae/unsupervised_layer1/checkpoints/experiment-11m-09d-17h-46m-23s.pkl`.
+`/path/to/repo/cifar10/cae/unsupervised_layer1/checkpoints/experiment-11m-09d-17h-46m-23s.pkl`.
 
 
 ## Supervised Training
