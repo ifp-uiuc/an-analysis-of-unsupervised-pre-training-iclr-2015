@@ -101,20 +101,47 @@ For a given layer L:
 ### How to select a checkpoint
 
 One factor that must be considered when doing unsupervised pre-training, is 
-when to stop a given layer and start training the next. We recommend finding 
-the point where the mean squared error (MSE) stops changing at a drastic rate. 
-This is colloquially known as finding the "elbow" of the curve. Our library, 
-anna, provides a means of visualizing the MSE over time in a script called 
-`log_plotter.py`, found in the scripts directory. 
+when to stop training a given layer and start training the next. We recommend 
+finding the point where the mean squared error (MSE) changes only by small 
+amounts (i.e. flattens out). This is colloquially known as finding the "elbow" 
+of the curve. Our library, anna, provides a means of visualizing the MSE over 
+time in a script called `log_plotter.py`, found in the scripts directory. 
 
-The MSE values in the log.txt file can be visualized using the following
-command:
+Suppose we are training the first layer of our cae. The MSE values in the 
+`log.txt` file can be visualized using the following command:
+
 ``` shell
 $ python /path/to/anna/anna/script/log_plotter.py log.txt
 ```
-This yield something like this:
+This will yield something like this:
 
 ![elbow_curve](./elbow_curve_stl10.png)
+
+In the case of this layer1 MSE plot, we would suggest choosing a checkpoint 
+after tick 60, which corresponds to 60*50=3,000 steps. To find the corresponding 
+checkpoint, simply open the `log.txt` file to see:
+
+```
+*29950, train error: 40.18884, time: 2.11
+29950, train error: 39.89196, time: 2.11
+29960, train error: 41.85508, time: 2.11
+29970, train error: 38.16329, time: 2.11
+29980, train error: 38.91000, time: 2.11
+29990, train error: 37.54842, time: 2.11
+./
+Saving model checkpoint to: ./checkpoints/experiment-11m-27d-08h-26m-01s.pkl
+*30000, train error: 39.29796, time: 2.11
+30000, train error: 40.01302, time: 2.11
+30010, train error: 38.51210, time: 2.11
+30020, train error: 47.76662, time: 2.11
+30030, train error: 42.10740, time: 2.11
+30040, train error: 38.92048, time: 2.11
+*30050, train error: 41.59723, time: 2.11
+30050, train error: 40.67958, time: 2.11
+```
+From this, we know then set `unsupervised_layer2` in `checkpoints.py` to:
+
+`./cae/unsupervised_layer1/checkpoints/experiment-11m-27d-08h-26m-01s.pkl`.
 
 ## Supervised Training
 
