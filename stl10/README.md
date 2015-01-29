@@ -116,7 +116,7 @@ $ python /path/to/anna/anna/script/log_plotter.py log.txt
 ```
 This will yield something like this:
 
-![elbow_curve](./elbow_curve_stl10.png)
+![elbow_curve](./docs/elbow_curve_stl10.png)
 
 In the case of this layer1 MSE plot, we would suggest choosing a checkpoint 
 after tick 60, which corresponds to 60*50=3,000 steps. To find the corresponding 
