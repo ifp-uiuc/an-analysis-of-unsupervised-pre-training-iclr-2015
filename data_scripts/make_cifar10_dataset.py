@@ -124,7 +124,7 @@ def reduce_dataset(data_path, N):
             y_all.append(y_temp)
 
         X_all = numpy.concatenate(X_all, axis=0)
-        y_all = numpy.int32(numpy.concatenate(y_all, axis=0))
+        y_all = numpy.uint8(numpy.concatenate(y_all, axis=0)).ravel()
 
         # Saving data out to .npy files.
         reduced_dataset_filename = os.path.join(data_path,
