@@ -59,7 +59,7 @@ f = open('pid', 'wb')
 f.write(str(pid)+'\n')
 f.close()
 
-model = UnsupervisedModel('experiment', './', learning_rate=1e-7)
+model = CAELayer3Model('experiment', './', learning_rate=1e-7)
 checkpoint = checkpoints.unsupervised_layer2
 util.set_parameters_from_unsupervised_model(model, checkpoint)
 monitor = util.Monitor(model, save_steps=200)
