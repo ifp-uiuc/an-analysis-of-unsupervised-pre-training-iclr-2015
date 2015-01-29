@@ -34,7 +34,8 @@ train_dataset = supervised_dataset.SupervisedDataset(train_data, train_labels)
 test_dataset = supervised_dataset.SupervisedDataset(test_data, test_labels)
 train_iterator = train_dataset.iterator(
     mode='random_uniform', batch_size=128, num_batches=100000)
-test_iterator = test_dataset.iterator(mode='sequential', batch_size=128)
+test_iterator = test_dataset.iterator(mode='random_uniform', batch_size=128,
+                                      num_batches=100000)
 
 normer = util.Normer2(filter_size=5, num_channels=3)
 augmenter = util.DataAugmenter(2, (32, 32), flip=False)
