@@ -4,7 +4,7 @@ import argparse
 
 import numpy
 
-from model import SupervisedModel
+from model import CNNModel
 from anna import util
 from anna.datasets import supervised_dataset
 
@@ -80,7 +80,7 @@ if __name__ == "__main__":
         raise Exception('Checkpoint directory does not exist.')
     checkpoint_list = sorted(os.listdir(checkpoint_dir))
 
-    model = SupervisedModel('xxx', './')
+    model = CNNModel('xxx', './')
     model.fc4.dropout = 0.0
     model._compile()
     num_channels = model.conv1.filter_shape[0]
