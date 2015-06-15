@@ -4,7 +4,7 @@ import argparse
 
 import numpy
 
-from model import CNNModel
+from models import CNNModel
 from anna import util
 from anna.datasets import supervised_dataset
 
