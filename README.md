@@ -27,7 +27,7 @@ The experiments are written in python 2.7, and require open source software to r
 
 ## Installation Note
 
-After successfully installing [pylearn2][pylearn2] and [anna][anna], the user must follow the three steps below in order to train the convolutional autoencoders:
+After successfully installing [pylearn2][pylearn2] and [anna][anna], the user needs to follow the three steps below before training the convolutional autoencoders:
 
 1. Go to the pylearn2 root directory.
 2. Open the ./pylearn2/sandbox/cuda_convnet/pool.py file.
