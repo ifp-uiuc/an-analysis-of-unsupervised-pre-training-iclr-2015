@@ -25,6 +25,30 @@ The experiments are written in python 2.7, and require open source software to r
 + [numpy][numpy], a standard numerical computing library for python.
 + [anna][anna], our neural network library, which itself depends on [theano][theano] and [pylearn2][pylearn2]. The pylearn dependencies are relatively small, and we may remove them to limit the number of dependencies.
 
+## Installation Note
+
+After successfully installing [pylearn2][pylearn2] and [anna][anna], the user must follow the three steps below in order to train the convolutional autoencoders:
+
+1. Go to the pylearn2 root directory.
+2. Open the ./pylearn2/sandbox/cuda_convnet/pool.py file.
+3. Add the following function to the MaxPoolGrad class.
+
+``` python
+def grad(self, inp, grads):
+        """
+        .. todo::
+
+            WRITEME
+        """
+        a, b, c = inp
+        ga = gpu_contiguous(a*0)
+        gb = gpu_contiguous(b*0)
+        gc = gpu_contiguous(c)
+        gz, = grads
+        gz = gpu_contiguous(gz)
+        return [ga, gb, MaxPoolRop(self.ds, self.stride)(a, gz)]
+```
+
 [numpy]:http://www.numpy.org/
 [theano]:http://deeplearning.net/software/theano/
 [pylearn2]:http://deeplearning.net/software/pylearn2/
