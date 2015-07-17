@@ -109,14 +109,14 @@ class CAELayer3Model(anna.models.UnsupervisedModel):
         weights_std=winit3,
         nonlinearity=nonlinearity,
         pad=1)
-    deconv3 = cc_layers.Deconv2DNoBiasLayer(
-        conv3, conv3, nonlinearity=layers.identity)
-    unpool4 = cc_layers.Unpooling2DLayer(deconv3, pool2)
     deconv4 = cc_layers.Deconv2DNoBiasLayer(
-        unpool4, conv2, nonlinearity=layers.identity)
-    unpool5 = cc_layers.Unpooling2DLayer(deconv4, pool1)
+        conv3, conv3, nonlinearity=layers.identity)
+    unpool5 = cc_layers.Unpooling2DLayer(deconv4, pool2)
+    deconv5 = cc_layers.Deconv2DNoBiasLayer(
+        unpool5, conv2, nonlinearity=layers.identity)
+    unpool6 = cc_layers.Unpooling2DLayer(deconv5, pool1)
     output = cc_layers.Deconv2DNoBiasLayer(
-        unpool5, conv1, nonlinearity=layers.identity)
+        unpool6, conv1, nonlinearity=layers.identity)
 
 
 class CNNModel(anna.models.SupervisedModel):

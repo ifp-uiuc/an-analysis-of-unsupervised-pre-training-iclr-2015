@@ -164,7 +164,7 @@ python -u train.py --split 0  \
 > log0.txt & 
 ```
 
-Since the [STL-10][STL-10] datsaet asks that people train their models on 10 
+Since the [STL-10][STL-10] dataset asks that people train their models on 10 
 pre-specified splits and average the results, the `--split` option indicates 
 which of the 10 splits to use (0-9) when training. The code will save the `.pkl` 
 file containing the network parameters to a directory called `./checkpoints_0/` 
