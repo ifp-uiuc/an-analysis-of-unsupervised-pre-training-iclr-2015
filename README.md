@@ -15,19 +15,11 @@ We also use unsupervised pre-training with additional color augmentation to achi
 
 ### Bibtex
 ```
-@article{DBLP:journals/corr/PaineKHH14,
-  author    = {Tom Le Paine and
-               Pooya Khorrami and
-               Wei Han and
-               Thomas S. Huang},
-  title     = {An Analysis of Unsupervised Pre-training in Light of Recent Advances},
-  journal   = {CoRR},
-  volume    = {abs/1412.6597},
-  year      = {2014},
-  url       = {http://arxiv.org/abs/1412.6597},
-  timestamp = {Thu, 01 Jan 2015 19:51:08 +0100},
-  biburl    = {http://dblp.uni-trier.de/rec/bib/journals/corr/PaineKHH14},
-  bibsource = {dblp computer science bibliography, http://dblp.org}
+@article{paine2014analysis,
+  title={An Analysis of Unsupervised Pre-training in Light of Recent Advances},
+  author={Paine, Tom Le and Khorrami, Pooya and Han, Wei and Huang, Thomas S},
+  journal={arXiv preprint arXiv:1412.6597},
+  year={2014}
 }
 ```
 
