@@ -23,7 +23,7 @@ def load_cifar10_data():
 
 def compute_overall_accuracy(model, normer, mode, iterator):
     
-    # Compute accuracy on each batch
+    # Get predictions of each batch
     i = 0
     pred_list = []
     for x_batch, _ in iterator:
