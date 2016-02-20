@@ -40,10 +40,10 @@ def load_stl10_data(train_split):
 
 def compute_overall_accuracy(model, normer, mode, iterator):
 
-    pred_list = []
     # Get predictions of each batch
     i = 0
-    for x_batch, y_batch in iterator:
+    pred_list = []
+    for x_batch, _ in iterator:
 
         x_batch = x_batch.transpose(1, 2, 3, 0)
         x_batch = normer.run(x_batch)
