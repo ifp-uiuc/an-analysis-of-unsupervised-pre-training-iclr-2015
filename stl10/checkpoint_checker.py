@@ -40,21 +40,54 @@ def load_stl10_data(train_split):
 
 def compute_overall_accuracy(model, normer, mode, iterator):
 
-    accuracy_list = []
-    # Compute accuracy on each batch
+    pred_list = []
+    # Get predictions of each batch
     i = 0
     for x_batch, y_batch in iterator:
 
         x_batch = x_batch.transpose(1, 2, 3, 0)
         x_batch = normer.run(x_batch)
-        batch_accuracy = model.eval(x_batch, y_batch-1)
-        accuracy_list.append(batch_accuracy)
+        batch_pred = numpy.argmax(model.prediction(x_batch), axis=1)
+        pred_list.append(batch_pred)
         i += 1
 
+    # Get predictions of smaller last batch
+    batch_pred = compute_accuracy_last_smaller_batch(iterator)
+    pred_list.append(batch_pred)
+    i += 1
+
     # Compute overall accuracy
-    overall_accuracy = numpy.mean(numpy.hstack(accuracy_list))
+    batch_preds_all = numpy.hstack(pred_list)
+    overall_accuracy = 1.0 * numpy.sum(
+        batch_preds_all == iterator.y-1) / len(iterator.y)
     print('\nOverall {} Accuracy: {}\n'.format(mode, overall_accuracy))
     return overall_accuracy
+
+
+def compute_accuracy_last_smaller_batch(iterator):
+
+    X = iterator.X
+    batch_size = iterator.batch_size
+    num_samples, num_channels, height, width = X.shape
+
+    # Calculate starting position of the last batch (i)
+    i = int(numpy.floor(num_samples / batch_size) * batch_size)
+    last_X_batch = X[i:, :, :, :]
+    batch_size_small = last_X_batch.shape[0]
+
+    # Construct dummy batch and populate the first few entries
+    dummy_X_batch = numpy.zeros((batch_size, num_channels,
+                                 height, width), dtype=numpy.float32)
+    dummy_X_batch[0:batch_size_small, :, :, :] = last_X_batch
+    dummy_X_batch = dummy_X_batch.transpose(1, 2, 3, 0)
+    dummy_X_batch = normer.run(dummy_X_batch)
+
+    # Compute the predictions and extract the entries of the small batch
+    batch_pred = model.prediction(dummy_X_batch)
+    batch_pred = batch_pred[0:batch_size_small, :]
+    batch_pred = numpy.argmax(batch_pred, axis=1)
+
+    return batch_pred
 
 
 if __name__ == "__main__":
